@@ -1,0 +1,8 @@
+[[package]]
+name = "cdl-cli"
+version = "0.1.0"
+
+[[package]]
+name = "cdl-core"
+version = "0.1.0"
+
