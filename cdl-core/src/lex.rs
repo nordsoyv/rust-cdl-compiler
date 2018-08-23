@@ -7,6 +7,7 @@ pub enum LexItem {
     Colon,
     OpenBracket,
     CloseBracket,
+    EOL,
 }
 
 #[derive(Debug)]
@@ -67,10 +68,12 @@ pub fn lex(input: &String) -> Result<TokenStream, String> {
                 it.next();
             }
             '\n' => {
-                println!("EOL");
+//                println!("End of line! n");
+                result.push(LexItem::EOL);
                 it.next();
             }
             ' ' => {
+//                println!("Found space '{}'", c);
                 it.next();
             }
             '"' => {
