@@ -147,35 +147,38 @@ impl Parser {
             token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
         }
 
-        let found_sub_type = {
-            match self.peek_current_token() {
-                LexItem::Identifier(s) => {
-                    node.sub_type = s.to_string();
-                    true
-                }
-                _ => { false }
+        match self.get_subtype() {
+            Some(s) => {
+                node.sub_type = s;
+                self.advance_stream()
             }
-        };
-        if found_sub_type {
-            self.advance_stream();
+            None => {}
         }
 
-        let found_reference = {
-            let reference = self.peek_current_token();
-            match reference {
-                LexItem::Reference(s) => {
-                    node.reference = s.to_string();
-                    true
-                }
-                _ => { false }
+        match self.get_reference() {
+            Some(s) => {
+                node.reference = s;
+                self.advance_stream();
             }
-        };
-        if found_reference {
-            self.advance_stream();
+            None => {}
         }
 
         node.body = self.parse_entity_body()?;
         Ok(node)
+    }
+
+    fn get_subtype(&mut self) -> Option<String> {
+        match self.peek_current_token() {
+            LexItem::Identifier(s) => Some(s.to_string()),
+            _ => None
+        }
+    }
+
+    fn get_reference(&mut self) -> Option<String> {
+        match self.peek_current_token() {
+            LexItem::Reference(s) => Some(s.to_string()),
+            _ => None
+        }
     }
 
 
@@ -222,15 +225,12 @@ impl Parser {
             identifier: String::new(),
             value: RHS::String("".to_string()),
         };
-        {
-            let identifier = self.peek_current_token();
-            match identifier {
-                LexItem::Identifier(m) => node.identifier = m.to_string(),
-                _ => return Err(format!("Didnt find field name {:?}", identifier))
-            }
+
+        match self.get_current_token() {
+            LexItem::Identifier(m) => node.identifier = m.to_string(),
+            identifier @ _ => return Err(format!("Didnt find field identifier, instead got {:?}", identifier))
         }
 
-        self.advance_stream();
         self.eat_token_if(LexItem::Colon);
         // parse RHS
         {
