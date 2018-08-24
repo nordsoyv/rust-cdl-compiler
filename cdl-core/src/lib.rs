@@ -1,12 +1,14 @@
-use lex::lex;
-use parse::AstRootNode;
-use parse::Parser;
-
 mod lex;
 mod parse;
 
+use parse::AstRootNode;
+use parse::Parser;
+use lex::Lexer;
+
+
 pub fn compile(cdl : String) -> Result<AstRootNode , String> {
-    let  lex_items = lex(&cdl).unwrap();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse();
     root
@@ -17,7 +19,10 @@ fn simple_lex() {
     let cdl = "widget kpi {
     label : \"Label\"
 }".to_string();
-    let res = lex(&cdl);
+    let lexer = Lexer::new(cdl);
+
+
+    let res = lexer.lex();
     let lex_items =res.unwrap();
     assert_eq!(lex_items.len(), 9);
 }
@@ -29,7 +34,8 @@ fn parse_entity(){
     labels : \"Labels\"
 }
 ".to_string();
-    let lex_items = lex(&cdl).unwrap();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
@@ -49,7 +55,8 @@ widget kpi {
     labels : \"Labels\"
 }
 ".to_string();
-    let lex_items = lex(&cdl).unwrap();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
   //  println!("{:?}", root);
@@ -66,7 +73,8 @@ widget   {
     labels : \"Labels\"
 }
 ".to_string();
-    let  lex_items = lex(&cdl).unwrap();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     //println!("{:?}", root.unwrap())
@@ -86,7 +94,8 @@ widget kpi  {
     }
 }
 ".to_string();
-    let  lex_items = lex(&cdl).unwrap();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);

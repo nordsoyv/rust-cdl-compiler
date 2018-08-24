@@ -10,50 +10,60 @@ pub enum LexItem {
     EOL,
 }
 
+pub struct Lexer {
+    input: String
+}
 
-pub fn lex(input: &String) -> Result<Vec<LexItem>, String> {
-    let mut result = Vec::new();
-    let mut it = input.chars().peekable();
-    while let Some(&c) = it.peek() {
-        match c {
-            'a'...'z' => {
-                it.next();
-                let ident = get_identifier(c, &mut it);
-                result.push(LexItem::Identifier(ident));
-            }
-            '{' => {
-                result.push(LexItem::OpenBracket);
-                it.next();
-            }
-            '}' => {
-                result.push(LexItem::CloseBracket);
-                it.next();
-            }
-            ':' => {
-                result.push(LexItem::Colon);
-                it.next();
-            }
-            '\n' => {
-//                println!("End of line! n");
-                result.push(LexItem::EOL);
-                it.next();
-            }
-            ' ' => {
-//                println!("Found space '{}'", c);
-                it.next();
-            }
-            '"' => {
-                it.next();
-                let quoted = get_quoted_string( &mut it);
-                result.push(LexItem::String(quoted));
-            }
-            _ => { println!("Unknown parsing {}", c); it.next();}
+impl Lexer {
+    pub fn new(input: String) -> Lexer {
+        Lexer {
+            input,
         }
     }
 
-    Ok(result)
+    pub fn lex(&self) -> Result<Vec<LexItem>, String> {
+        let mut result = Vec::new();
+        let mut it = self.input.chars().peekable();
+        while let Some(&c) = it.peek() {
+            match c {
+                'a'...'z' => {
+                    it.next();
+                    let ident = get_identifier(c, &mut it);
+                    result.push(LexItem::Identifier(ident));
+                }
+                '{' => {
+                    result.push(LexItem::OpenBracket);
+                    it.next();
+                }
+                '}' => {
+                    result.push(LexItem::CloseBracket);
+                    it.next();
+                }
+                ':' => {
+                    result.push(LexItem::Colon);
+                    it.next();
+                }
+                '\n' => {
+                    result.push(LexItem::EOL);
+                    it.next();
+                }
+                ' ' => {
+                    it.next();
+                }
+                '"' => {
+                    it.next();
+                    let quoted = get_quoted_string(&mut it);
+                    result.push(LexItem::String(quoted));
+                }
+                _ => {
+                    println!("Unknown parsing {}", c);
+                    it.next();
+                }
+            }
+        }
+        Ok(result)
+    }
 }
-
 
 fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> String {
     let mut identifier = String::new();
@@ -64,7 +74,7 @@ fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> St
                 identifier.push(ch);
                 iter.next();
             }
-            _ => {break; }
+            _ => { break; }
         }
     }
     identifier
@@ -74,7 +84,10 @@ fn get_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     let mut quoted = String::new();
     while let Some(&ch) = iter.peek() {
         match ch {
-            '"' => {iter.next(); break; }
+            '"' => {
+                iter.next();
+                break;
+            }
             _ => {
                 quoted.push(ch);
                 iter.next();
