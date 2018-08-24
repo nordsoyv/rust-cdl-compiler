@@ -14,7 +14,7 @@ pub struct AstRootNode {
 pub struct AstEntityNode {
     pub main_type: String,
     pub sub_type: String,
-    pub reference : String,
+    pub reference: String,
     pub identifier: String,
     pub body: AstEntityBodyNode,
 }
@@ -130,7 +130,7 @@ impl Parser {
 
     fn parse_entity(&mut self) -> Result<AstEntityNode, String> {
         let mut node = AstEntityNode::new();
-         match (self.peek_current_token(), self.peek_next_token()?) {
+        match (self.peek_current_token(), self.peek_next_token()?) {
             (LexItem::Identifier(_), LexItem::Colon) => {
                 match self.get_current_token() {
                     LexItem::Identifier(ident) => node.identifier = ident.to_string(),
@@ -186,20 +186,19 @@ impl Parser {
         let mut entities = Vec::new();
 
         loop {
-            let is_done = match self.peek_current_token() {
-                LexItem::CloseBracket => true,
-                _ => false
+            // are we done?
+            match self.peek_current_token() {
+                LexItem::CloseBracket => {
+                    self.eat_token_if(LexItem::CloseBracket);
+                    self.eat_token_if(LexItem::EOL);
+                    return Ok(AstEntityBodyNode {
+                        fields,
+                        children: entities,
+                    });
+                }
+                _ => {}
             };
-
-            if is_done {
-                self.eat_token_if(LexItem::CloseBracket);
-                self.eat_token_if(LexItem::EOL);
-                return Ok(AstEntityBodyNode {
-                    fields,
-                    children: entities,
-                });
-            }
-
+            // skip blank lines
             match self.peek_current_token() {
                 LexItem::EOL => {
                     self.eat_token_if(LexItem::EOL);
@@ -208,15 +207,11 @@ impl Parser {
                 _ => {}
             }
 
-            let next_is_field = match (self.peek_current_token(), self.peek_next_token()?) {
-                (LexItem::Identifier(_), LexItem::Identifier(_)) => false,
-                (LexItem::Identifier(_), LexItem::Colon) => true,
-                (_, _) => return Err("Trying to parse entitiy body, and not field or entity found".to_string())
-            };
-            if next_is_field {
-                fields.push(self.parse_field()?);
-            } else {
-                entities.push(self.parse_entity()?)
+            // try parsing next line
+            match (self.peek_current_token(), self.peek_next_token()?) {
+                (LexItem::Identifier(_), LexItem::Identifier(_)) => entities.push(self.parse_entity()?),
+                (LexItem::Identifier(_), LexItem::Colon) => fields.push(self.parse_field()?),
+                (_, _) => return Err("Trying to parse entity body, and not field or entity found".to_string())
             }
         }
     }
