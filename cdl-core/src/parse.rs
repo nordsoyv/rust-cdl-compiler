@@ -14,6 +14,7 @@ pub struct AstRootNode {
 pub struct AstEntityNode {
     pub main_type: String,
     pub sub_type: String,
+    pub reference : String,
     pub identifier: String,
     pub body: AstEntityBodyNode,
 }
@@ -25,6 +26,7 @@ impl AstEntityNode {
             identifier: String::new(),
             main_type: String::new(),
             sub_type: String::new(),
+            reference: String::new(),
         }
     }
 }
@@ -73,7 +75,7 @@ impl Parser {
         &self.tokens[self.index]
     }
 
-    fn peek_next_token(&self) -> Result<&LexItem,String> {
+    fn peek_next_token(&self) -> Result<&LexItem, String> {
         if self.index + 1 < self.tokens.len() {
             return Ok(&self.tokens[self.index + 1]);
         }
@@ -120,22 +122,29 @@ impl Parser {
                     let entity = self.parse_entity()?;
                     root.children.push(entity);
                 }
-                _ => { return Err(format!("Error when parsing top level, found {:?}", self.peek_current_token() )); }
+                _ => { return Err(format!("Error when parsing top level, found {:?}", self.peek_current_token())); }
             }
         }
         Ok(root)
     }
 
-    fn parse_entity(&mut self) -> Result<AstEntityNode,String> {
+    fn parse_entity(&mut self) -> Result<AstEntityNode, String> {
         let mut node = AstEntityNode::new();
-        {
-            let main_type = self.peek_current_token();
-            match main_type {
-                LexItem::Identifier(m) => node.main_type = m.to_string(),
-                _ => return Err("Trying to parse Entity, didnt find main type".to_string())
+         match (self.peek_current_token(), self.peek_next_token()?) {
+            (LexItem::Identifier(_), LexItem::Colon) => {
+                match self.get_current_token() {
+                    LexItem::Identifier(ident) => node.identifier = ident.to_string(),
+                    id @ _ => return Err(format!("Trying to get identifier for entity, found {:?}", id))
+                }
+                self.eat_token_if(LexItem::Colon);
             }
+            _ => {}
+        };
+        match self.get_current_token() {
+            LexItem::Identifier(m) => node.main_type = m.to_string(),
+            token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
         }
-        self.advance_stream();
+
         let found_sub_type = {
             let sub_type = self.peek_current_token();
             match sub_type {
@@ -150,13 +159,27 @@ impl Parser {
             self.advance_stream();
         }
 
+        let found_reference = {
+            let reference = self.peek_current_token();
+            match reference {
+                LexItem::Reference(s) => {
+                    node.reference = s.to_string();
+                    true
+                }
+                _ => { false }
+            }
+        };
+        if found_reference {
+            self.advance_stream();
+        }
+
         let body = self.parse_entity_body()?;
         node.body = body;
         Ok(node)
     }
 
 
-    fn parse_entity_body(&mut self) -> Result<AstEntityBodyNode,String> {
+    fn parse_entity_body(&mut self) -> Result<AstEntityBodyNode, String> {
         self.eat_token_if(LexItem::OpenBracket);
         self.eat_token_if(LexItem::EOL);
         let mut fields = Vec::new();

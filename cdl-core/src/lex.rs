@@ -4,6 +4,7 @@ use std::iter::Peekable;
 pub enum LexItem {
     Identifier(String),
     String(String),
+    Reference(String),
     Colon,
     OpenBracket,
     CloseBracket,
@@ -30,6 +31,11 @@ impl Lexer {
                     it.next();
                     let ident = get_identifier(c, &mut it);
                     result.push(LexItem::Identifier(ident));
+                }
+                '@' => {
+                    it.next();
+                    let reference = get_reference( &mut it);
+                    result.push(LexItem::Reference(reference));
                 }
                 '{' => {
                     result.push(LexItem::OpenBracket);
@@ -79,6 +85,21 @@ fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> St
     }
     identifier
 }
+
+fn get_reference<T: Iterator<Item=char>>( iter: &mut Peekable<T>) -> String {
+    let mut reference = String::new();
+    while let Some(&ch) = iter.peek() {
+        match ch {
+            'a'...'z' | '.' => {
+                reference.push(ch);
+                iter.next();
+            }
+            _ => { break; }
+        }
+    }
+    reference
+}
+
 
 fn get_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     let mut quoted = String::new();
