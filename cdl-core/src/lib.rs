@@ -1,13 +1,14 @@
 use lex::lex;
-use parse::parse;
 use parse::AstRootNode;
+use parse::Parser;
 
 mod lex;
 mod parse;
 
 pub fn compile(cdl : String) -> Result<AstRootNode , String> {
-    let mut lex_items = lex(&cdl).unwrap();
-    let root = parse(&mut lex_items);
+    let  lex_items = lex(&cdl).unwrap();
+    let mut parser = Parser::new(lex_items);
+    let root = parser.parse();
     root
 }
 
@@ -18,7 +19,7 @@ fn simple_lex() {
 }".to_string();
     let res = lex(&cdl);
     let lex_items =res.unwrap();
-    assert_eq!(lex_items.get_length(), 9);
+    assert_eq!(lex_items.len(), 9);
 //    println!("{:?}", lex_items)
 }
 
@@ -28,10 +29,11 @@ fn simple_parse(){
     label : \"Label\"
     labels : \"Labels\"
 }".to_string();
-    let mut lex_items = lex(&cdl).unwrap();
+    let lex_items = lex(&cdl).unwrap();
 //    println!("{:?}", lex_items);
-    let root = parse(&mut lex_items).unwrap();
-//    println!("{:?}", root);
+    let mut parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+
     assert_eq!(root.children.len(), 1);
     assert_eq!(root.children[0].fields.len(), 2);
 }
@@ -49,9 +51,10 @@ widget kpi {
     labels : \"Labels\"
 }
 ".to_string();
-    let mut lex_items = lex(&cdl).unwrap();
-    let root = parse(&mut lex_items).unwrap();
-//    println!("{:?}", root);
+    let lex_items = lex(&cdl).unwrap();
+    let mut parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+  //  println!("{:?}", root);
     assert_eq!(root.children.len(), 2);
     assert_eq!(root.children[0].fields.len(), 2);
     assert_eq!(root.children[1].fields.len(), 2);
@@ -65,8 +68,9 @@ widget   {
     labels : \"Labels\"
 }
 ".to_string();
-    let mut lex_items = lex(&cdl).unwrap();
-    let _root = parse(&mut lex_items);
+    let  lex_items = lex(&cdl).unwrap();
+    let mut parser = Parser::new(lex_items);
+    let _root = parser.parse().unwrap();
     //println!("{:?}", root.unwrap())
 }
 
@@ -80,8 +84,10 @@ widget kpi  {
     }
 }
 ".to_string();
-    let mut lex_items = lex(&cdl).unwrap();
-    let root = parse(&mut lex_items).unwrap();
+    let  lex_items = lex(&cdl).unwrap();
+    let mut parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+    //let root = parse(&mut tokens).unwrap();
     //println!("{:?}", root);
     assert_eq!(root.children.len(), 1);
     assert_eq!(root.children[0].fields.len(), 1);

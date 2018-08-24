@@ -10,42 +10,8 @@ pub enum LexItem {
     EOL,
 }
 
-#[derive(Debug)]
-pub struct TokenStream {
-    tokens : Vec<LexItem>,
-    index : usize,
-}
 
-#[allow(dead_code)]
-impl TokenStream {
-    pub fn get_length(&self)-> usize {
-        self.tokens.len()
-    }
-
-    pub fn get_current_token (&self) -> &LexItem{
-        &self.tokens[self.index]
-    }
-
-    pub fn get_next_token  (&self) -> &LexItem {
-        if self.index + 1 < self.tokens.len() {
-            return &self.tokens[self.index+1]
-        }
-        panic!("Trying to access token past end of stream")
-    }
-
-    pub fn advance_stream(&mut self){
-        self.index += 1;
-    }
-
-    pub fn has_items(&self) -> bool{
-        self.index < self.tokens.len()
-    }
-
-}
-
-
-
-pub fn lex(input: &String) -> Result<TokenStream, String> {
+pub fn lex(input: &String) -> Result<Vec<LexItem>, String> {
     let mut result = Vec::new();
     let mut it = input.chars().peekable();
     while let Some(&c) = it.peek() {
@@ -85,11 +51,7 @@ pub fn lex(input: &String) -> Result<TokenStream, String> {
         }
     }
 
-    let stream = TokenStream{
-        tokens: result,
-        index: 0,
-    };
-    Ok(stream)
+    Ok(result)
 }
 
 
