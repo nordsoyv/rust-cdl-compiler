@@ -130,6 +130,7 @@ impl Parser {
 
     fn parse_entity(&mut self) -> Result<AstEntityNode, String> {
         let mut node = AstEntityNode::new();
+        // check if we are starting with an id
         match (self.peek_current_token(), self.peek_next_token()?) {
             (LexItem::Identifier(_), LexItem::Colon) => {
                 match self.get_current_token() {
@@ -140,14 +141,14 @@ impl Parser {
             }
             _ => {}
         };
+        // get main type
         match self.get_current_token() {
             LexItem::Identifier(m) => node.main_type = m.to_string(),
             token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
         }
 
         let found_sub_type = {
-            let sub_type = self.peek_current_token();
-            match sub_type {
+            match self.peek_current_token() {
                 LexItem::Identifier(s) => {
                     node.sub_type = s.to_string();
                     true
@@ -173,8 +174,7 @@ impl Parser {
             self.advance_stream();
         }
 
-        let body = self.parse_entity_body()?;
-        node.body = body;
+        node.body = self.parse_entity_body()?;
         Ok(node)
     }
 
