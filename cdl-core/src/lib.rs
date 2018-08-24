@@ -88,7 +88,7 @@ widget   {
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
     assert_eq!(root.children[0].body.fields.len(), 2);
-    assert_eq!(root.children[0].sub_type, "");
+    assert_eq!(root.children[0].header.sub_type, "");
 }
 
 #[test]
@@ -124,7 +124,7 @@ fn parse_entity_with_id(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].identifier, "id".to_string());
+    assert_eq!(root.children[0].header.identifier, "id".to_string());
     assert_eq!(root.children[0].body.fields.len(), 2);
 }
 
@@ -140,8 +140,8 @@ fn parse_entity_with_reference(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].identifier, "id".to_string());
-    assert_eq!(root.children[0].reference, "default".to_string());
+    assert_eq!(root.children[0].header.identifier, "id".to_string());
+    assert_eq!(root.children[0].header.reference, "default".to_string());
     assert_eq!(root.children[0].body.fields.len(), 2);
 }
 

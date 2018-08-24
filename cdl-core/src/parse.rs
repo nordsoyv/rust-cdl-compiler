@@ -12,10 +12,7 @@ pub struct AstRootNode {
 
 #[derive(Debug)]
 pub struct AstEntityNode {
-    pub main_type: String,
-    pub sub_type: String,
-    pub reference: String,
-    pub identifier: String,
+    pub header : AstEntityHeaderNode,
     pub body: AstEntityBodyNode,
 }
 
@@ -23,10 +20,7 @@ impl AstEntityNode {
     fn new() -> AstEntityNode {
         AstEntityNode {
             body: AstEntityBodyNode::new(),
-            identifier: String::new(),
-            main_type: String::new(),
-            sub_type: String::new(),
-            reference: String::new(),
+            header : AstEntityHeaderNode::new(),
         }
     }
 }
@@ -42,6 +36,25 @@ impl AstEntityBodyNode {
         AstEntityBodyNode {
             fields: Vec::new(),
             children: Vec::new(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct AstEntityHeaderNode {
+    pub main_type: String,
+    pub sub_type: String,
+    pub reference: String,
+    pub identifier: String,
+}
+
+impl AstEntityHeaderNode {
+    fn new() -> AstEntityHeaderNode {
+        AstEntityHeaderNode {
+            main_type : String::new(),
+            sub_type : String::new(),
+            reference : String::new(),
+            identifier : String::new(),
         }
     }
 }
@@ -130,7 +143,13 @@ impl Parser {
 
     fn parse_entity(&mut self) -> Result<AstEntityNode, String> {
         let mut node = AstEntityNode::new();
-        // check if we are starting with an id
+        node.header = self.parse_entity_header()?;
+        node.body = self.parse_entity_body()?;
+        Ok(node)
+    }
+
+    fn parse_entity_header(&mut self) -> Result<AstEntityHeaderNode, String> {
+        let mut node = AstEntityHeaderNode::new();
         match (self.peek_current_token(), self.peek_next_token()?) {
             (LexItem::Identifier(_), LexItem::Colon) => {
                 match self.get_current_token() {
@@ -163,8 +182,8 @@ impl Parser {
             None => {}
         }
 
-        node.body = self.parse_entity_body()?;
         Ok(node)
+
     }
 
     fn get_subtype(&mut self) -> Option<String> {
