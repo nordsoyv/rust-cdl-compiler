@@ -41,6 +41,17 @@ fn lex_reference() {
     assert_eq!(lex_items.len(), 10);
 }
 
+#[test]
+fn lex_extended() {
+    let cdl = "widget kpi @default {
+    label : a(b+c)
+}".to_string();
+    let lexer = Lexer::new(cdl);
+    let res = lexer.lex();
+    let lex_items =res.unwrap();
+    assert_eq!(lex_items.len(), 15);
+}
+
 
 #[test]
 fn parse_entity(){
@@ -166,6 +177,14 @@ fn print_cdl(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     let out = print::print(root);
-    println!("{}", out);
+    let correct = "id: widget kpi @default {
+    label: \"Label\"
+    labels: \"Labels\"
+    tile kpi {
+        type: \"type\"
+    }
+}
+".to_string();
+    assert_eq!(out,correct);
 }
 

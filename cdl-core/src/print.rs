@@ -17,7 +17,7 @@ pub fn print(root: AstRootNode) -> String {
 
 fn print_entity(entity: &AstEntityNode, indent: usize) -> String {
     let mut res = print_entity_header(&entity.header, indent );
-    res += &print_entity_body(&entity.body, indent + 2);
+    res += &print_entity_body(&entity.body, indent + 1);
     return res;
 }
 
@@ -58,13 +58,13 @@ fn print_entity_body(body: &AstEntityBodyNode, indent: usize) -> String {
     let mut res = "{\n".to_string();
 
     for field in &body.fields {
-        res.push_str(&print_field(&field, indent + 2));
+        res.push_str(&print_field(&field, indent + 1));
     }
 
     for child in &body.children {
-        res.push_str(&print_entity(&child, indent + 2));
+        res.push_str(&print_entity(&child, indent + 1));
     }
-    res.push_str(&create_indent(indent));
+    res.push_str(&create_indent(indent - 1));
     res.push_str("}\n");
     return res;
 }
@@ -87,5 +87,5 @@ fn print_field(field: &AstFieldNode, indent: usize) -> String {
 }
 
 fn create_indent(indent: usize) -> String {
-    std::iter::repeat(" ").take(indent).collect::<String>()
+    std::iter::repeat(" ").take(indent * 2).collect::<String>()
 }
