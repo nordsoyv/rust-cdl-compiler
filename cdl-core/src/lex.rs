@@ -8,6 +8,12 @@ pub enum LexItem {
     Colon,
     OpenBracket,
     CloseBracket,
+    OpenPar,
+    ClosePar,
+    Plus,
+    Minus,
+    Div,
+    Mul,
     EOL,
 }
 
@@ -34,7 +40,7 @@ impl Lexer {
                 }
                 '@' => {
                     it.next();
-                    let reference = get_reference( &mut it);
+                    let reference = get_reference(&mut it);
                     result.push(LexItem::Reference(reference));
                 }
                 '{' => {
@@ -61,6 +67,30 @@ impl Lexer {
                     let quoted = get_quoted_string(&mut it);
                     result.push(LexItem::String(quoted));
                 }
+                '(' => {
+                    result.push(LexItem::OpenPar);
+                    it.next();
+                }
+                ')' => {
+                    result.push(LexItem::ClosePar);
+                    it.next();
+                }
+                '+' => {
+                    result.push(LexItem::Plus);
+                    it.next();
+                }
+                '-' => {
+                    result.push(LexItem::Minus);
+                    it.next();
+                }
+                '/' => {
+                    result.push(LexItem::Div);
+                    it.next();
+                }
+                '*' => {
+                    result.push(LexItem::Mul);
+                    it.next();
+                }
                 _ => {
                     println!("Unknown parsing {}", c);
                     it.next();
@@ -86,7 +116,7 @@ fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> St
     identifier
 }
 
-fn get_reference<T: Iterator<Item=char>>( iter: &mut Peekable<T>) -> String {
+fn get_reference<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     let mut reference = String::new();
     while let Some(&ch) = iter.peek() {
         match ch {
