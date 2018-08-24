@@ -43,18 +43,18 @@ impl AstEntityBodyNode {
 #[derive(Debug)]
 pub struct AstEntityHeaderNode {
     pub main_type: String,
-    pub sub_type: String,
-    pub reference: String,
-    pub identifier: String,
+    pub sub_type: Option<String>,
+    pub reference: Option<String>,
+    pub identifier: Option<String>,
 }
 
 impl AstEntityHeaderNode {
     fn new() -> AstEntityHeaderNode {
         AstEntityHeaderNode {
             main_type : String::new(),
-            sub_type : String::new(),
-            reference : String::new(),
-            identifier : String::new(),
+            sub_type : None,
+            reference : None,
+            identifier : None,
         }
     }
 }
@@ -153,7 +153,7 @@ impl Parser {
         match (self.peek_current_token(), self.peek_next_token()?) {
             (LexItem::Identifier(_), LexItem::Colon) => {
                 match self.get_current_token() {
-                    LexItem::Identifier(ident) => node.identifier = ident.to_string(),
+                    LexItem::Identifier(ident) => node.identifier = Some(ident.to_string()),
                     id @ _ => return Err(format!("Trying to get identifier for entity, found {:?}", id))
                 }
                 self.eat_token_if(LexItem::Colon);
@@ -168,7 +168,7 @@ impl Parser {
 
         match self.get_subtype() {
             Some(s) => {
-                node.sub_type = s;
+                node.sub_type = Some(s);
                 self.advance_stream()
             }
             None => {}
@@ -176,7 +176,7 @@ impl Parser {
 
         match self.get_reference() {
             Some(s) => {
-                node.reference = s;
+                node.reference = Some(s);
                 self.advance_stream();
             }
             None => {}

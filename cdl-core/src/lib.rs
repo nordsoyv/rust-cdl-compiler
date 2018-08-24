@@ -1,5 +1,6 @@
 mod lex;
 mod parse;
+mod print;
 
 use parse::AstRootNode;
 use parse::Parser;
@@ -12,6 +13,10 @@ pub fn compile(cdl : String) -> Result<AstRootNode , String> {
     let mut parser = Parser::new(lex_items);
     let root = parser.parse();
     root
+}
+
+pub fn print(root : AstRootNode) -> String {
+    print::print(root)
 }
 
 #[test]
@@ -88,7 +93,7 @@ widget   {
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
     assert_eq!(root.children[0].body.fields.len(), 2);
-    assert_eq!(root.children[0].header.sub_type, "");
+    assert_eq!(root.children[0].header.sub_type, None);
 }
 
 #[test]
@@ -124,7 +129,7 @@ fn parse_entity_with_id(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].header.identifier, "id".to_string());
+    assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
     assert_eq!(root.children[0].body.fields.len(), 2);
 }
 
@@ -140,8 +145,27 @@ fn parse_entity_with_reference(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].header.identifier, "id".to_string());
-    assert_eq!(root.children[0].header.reference, "default".to_string());
+    assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
+    assert_eq!(root.children[0].header.reference, Some("default".to_string()));
     assert_eq!(root.children[0].body.fields.len(), 2);
+}
+
+#[test]
+fn print_cdl(){
+    let cdl = "id: widget kpi @default {
+    label : \"Label\"
+    labels : \"Labels\"
+
+    tile kpi {
+        type : \"type\"
+    }
+}
+".to_string();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
+    let mut parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+    let out = print::print(root);
+    println!("{}", out);
 }
 
