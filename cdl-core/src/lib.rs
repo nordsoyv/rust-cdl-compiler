@@ -20,26 +20,24 @@ fn simple_lex() {
     let res = lex(&cdl);
     let lex_items =res.unwrap();
     assert_eq!(lex_items.len(), 9);
-//    println!("{:?}", lex_items)
 }
 
 #[test]
-fn simple_parse(){
+fn parse_entity(){
     let cdl = "widget kpi {
     label : \"Label\"
     labels : \"Labels\"
-}".to_string();
+}
+".to_string();
     let lex_items = lex(&cdl).unwrap();
-//    println!("{:?}", lex_items);
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
-
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].fields.len(), 2);
+    assert_eq!(root.children[0].body.fields.len(), 2);
 }
 
 #[test]
-fn simple_parse2(){
+fn parse_2_entity(){
     let cdl = "
 widget kpi {
     label : \"Label\"
@@ -56,12 +54,12 @@ widget kpi {
     let root = parser.parse().unwrap();
   //  println!("{:?}", root);
     assert_eq!(root.children.len(), 2);
-    assert_eq!(root.children[0].fields.len(), 2);
-    assert_eq!(root.children[1].fields.len(), 2);
+    assert_eq!(root.children[0].body.fields.len(), 2);
+    assert_eq!(root.children[1].body.fields.len(), 2);
 }
 
 #[test]
-fn parse_with_no_subtype(){
+fn entity_with_no_subtype(){
     let cdl = "
 widget   {
     label : \"Label\"
@@ -70,15 +68,19 @@ widget   {
 ".to_string();
     let  lex_items = lex(&cdl).unwrap();
     let mut parser = Parser::new(lex_items);
-    let _root = parser.parse().unwrap();
+    let root = parser.parse().unwrap();
     //println!("{:?}", root.unwrap())
+    assert_eq!(root.children.len(), 1);
+    assert_eq!(root.children[0].body.fields.len(), 2);
+    assert_eq!(root.children[0].sub_type, "");
 }
 
 #[test]
-fn parse_with_entity_inside_entity(){
+fn entity_with_entity_inside_entity(){
     let cdl = "
 widget kpi  {
     label : \"Label\"
+
     tile kpi {
        type : \"type\"
     }
@@ -87,10 +89,8 @@ widget kpi  {
     let  lex_items = lex(&cdl).unwrap();
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
-    //let root = parse(&mut tokens).unwrap();
-    //println!("{:?}", root);
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].fields.len(), 1);
-    assert_eq!(root.children[0].children.len(), 1);
-    assert_eq!(root.children[0].children[0].fields.len(), 1);
+    assert_eq!(root.children[0].body.fields.len(), 1);
+    assert_eq!(root.children[0].body.children.len(), 1);
+    assert_eq!(root.children[0].body.children[0].body.fields.len(), 1);
 }
