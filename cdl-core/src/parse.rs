@@ -1,8 +1,59 @@
 use lex::LexItem;
 
 #[derive(Debug)]
-pub enum RHS {
-    String(String)
+pub enum Expr {
+    String(Box<AstStringNode>),
+    Identifier(Box<AstIdentifierNode>),
+    Number(Box<AstNumberNode>),
+    Function(Box<AstFunctionNode>),
+    VPath(Box<AstVPathNode>),
+    Operator(Box<AstOperatorNode>),
+}
+
+#[derive(Debug)]
+pub struct AstStringNode {
+    pub value : String
+}
+
+#[derive(Debug)]
+pub struct AstIdentifierNode {
+    pub value : String
+}
+
+#[derive(Debug)]
+pub struct AstNumberNode {
+    pub value : f64,
+    pub text_rep : String
+}
+
+impl AstNumberNode {
+    pub fn new(number : f64, text_rep : String) -> AstNumberNode {
+        AstNumberNode {
+            value : number,
+            text_rep,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct AstFunctionNode {
+    pub identifier : String,
+    pub argument_list : Vec<Expr>
+}
+
+#[derive(Debug)]
+pub struct AstOperatorNode {
+    pub operator : char,
+    pub left_side: Expr,
+    pub right_side :Expr
+}
+
+#[derive(Debug)]
+pub struct AstVPathNode {
+    pub table: Option<String>,
+    pub sub_table : Option<String>,
+    pub field : Option<String>,
+    pub sub_field : Option<String>,
 }
 
 #[derive(Debug)]
@@ -62,7 +113,7 @@ impl AstEntityHeaderNode {
 #[derive(Debug)]
 pub struct AstFieldNode {
     pub identifier: String,
-    pub value: RHS,
+    pub value: Expr,
 }
 
 #[derive(Debug)]
@@ -242,7 +293,7 @@ impl Parser {
     fn parse_field(&mut self) -> Result<AstFieldNode, String> {
         let mut node = AstFieldNode {
             identifier: String::new(),
-            value: RHS::String("".to_string()),
+            value: Expr::String(Box::new( AstStringNode { value: String::new() })),
         };
 
         match self.get_current_token() {
@@ -251,17 +302,19 @@ impl Parser {
         }
 
         self.eat_token_if(LexItem::Colon);
-        // parse RHS
-        {
-            let rhs = self.peek_current_token();
-            match rhs {
-                LexItem::String(m) => node.value = RHS::String(m.to_string()),
-                _ => return Err(format!("Didnt find rhs "))
-            }
-        }
-        self.advance_stream();
+        node.value = self.parse_rhs()?;
         self.eat_token_if(LexItem::EOL);
         Ok(node)
+    }
+
+    fn parse_rhs(&mut self) -> Result<Expr,String> {
+        match self.get_current_token() {
+            LexItem::String(m) => {
+                return Ok(Expr::String(Box::new( AstStringNode { value: m.to_string() })));
+            } ,
+            _ => return Err(format!("Didnt find rhs "))
+        }
+
     }
 }
 

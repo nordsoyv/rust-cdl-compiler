@@ -3,7 +3,7 @@ use parse::AstEntityNode;
 use parse::AstEntityHeaderNode;
 use parse::AstEntityBodyNode;
 use parse::AstFieldNode;
-use parse::RHS;
+use parse::Expr;
 use std;
 
 pub fn print(root: AstRootNode) -> String {
@@ -76,11 +76,21 @@ fn print_field(field: &AstFieldNode, indent: usize) -> String {
     res.push_str(&field.identifier);
     res.push_str(": ");
     match field.value {
-        RHS::String(ref s) => {
+        Expr::String(ref s) => {
             res.push_str("\"");
-            res.push_str(s);
+            res.push_str(&s.value);
             res.push_str("\"");
         }
+        Expr::Identifier(ref s) => {
+            res.push_str(&s.value);
+        }
+        Expr::Number(ref n) => {
+            res.push_str(&n.value.to_string());
+        }
+        Expr::Function(_) => panic!("Trying to print function"),
+        Expr::VPath(_) => panic!("Trying to print VPath"),
+        Expr::Operator(_) => panic!("Trying to print Operator"),
+
     }
     res.push_str("\n");
     res
