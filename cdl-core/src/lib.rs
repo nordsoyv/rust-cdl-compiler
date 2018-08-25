@@ -57,7 +57,8 @@ fn lex_extended() {
 fn parse_entity(){
     let cdl = "widget kpi {
     label : \"Label\"
-    labels : \"Labels\"
+    id : identifier
+    number: 1234
 }
 ".to_string();
     let lexer = Lexer::new(cdl);
@@ -65,7 +66,8 @@ fn parse_entity(){
     let mut parser = Parser::new(lex_items);
     let root = parser.parse().unwrap();
     assert_eq!(root.children.len(), 1);
-    assert_eq!(root.children[0].body.fields.len(), 2);
+    assert_eq!(root.children[0].body.fields.len(), 3);
+    //println!("{:?}", root.children[0].body.fields[2]);
 }
 
 #[test]
@@ -165,8 +167,8 @@ fn parse_entity_with_reference(){
 fn print_cdl(){
     let cdl = "id: widget kpi @default {
     label : \"Label\"
-    labels : \"Labels\"
-
+    id : identifier
+    number : 1234.001000
     tile kpi {
         type : \"type\"
     }
@@ -179,7 +181,8 @@ fn print_cdl(){
     let out = print::print(root);
     let correct = "id: widget kpi @default {
     label: \"Label\"
-    labels: \"Labels\"
+    id: identifier
+    number: 1234.001000
     tile kpi {
         type: \"type\"
     }

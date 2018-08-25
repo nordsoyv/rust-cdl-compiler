@@ -85,7 +85,7 @@ fn print_field(field: &AstFieldNode, indent: usize) -> String {
             res.push_str(&s.value);
         }
         Expr::Number(ref n) => {
-            res.push_str(&n.value.to_string());
+            res.push_str(&n.text_rep.to_string());
         }
         Expr::Function(_) => panic!("Trying to print function"),
         Expr::VPath(_) => panic!("Trying to print VPath"),

@@ -217,7 +217,7 @@ impl Parser {
             token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
         }
 
-        match self.get_subtype() {
+        match self.get_entity_subtype() {
             Some(s) => {
                 node.sub_type = Some(s);
                 self.advance_stream()
@@ -225,32 +225,29 @@ impl Parser {
             None => {}
         }
 
-        match self.get_reference() {
+        match self.get_entity_reference() {
             Some(s) => {
                 node.reference = Some(s);
                 self.advance_stream();
             }
             None => {}
         }
-
         Ok(node)
-
     }
 
-    fn get_subtype(&mut self) -> Option<String> {
+    fn get_entity_subtype(&mut self) -> Option<String> {
         match self.peek_current_token() {
             LexItem::Identifier(s) => Some(s.to_string()),
             _ => None
         }
     }
 
-    fn get_reference(&mut self) -> Option<String> {
+    fn get_entity_reference(&mut self) -> Option<String> {
         match self.peek_current_token() {
             LexItem::Reference(s) => Some(s.to_string()),
             _ => None
         }
     }
-
 
     fn parse_entity_body(&mut self) -> Result<AstEntityBodyNode, String> {
         self.eat_token_if(LexItem::OpenBracket);
@@ -282,8 +279,8 @@ impl Parser {
 
             // try parsing next line
             match (self.peek_current_token(), self.peek_next_token()?) {
-                (LexItem::Identifier(_), LexItem::Identifier(_)) => entities.push(self.parse_entity()?),
                 (LexItem::Identifier(_), LexItem::Colon) => fields.push(self.parse_field()?),
+                (LexItem::Identifier(_), _) => entities.push(self.parse_entity()?),
                 (_, _) => return Err("Trying to parse entity body, and not field or entity found".to_string())
             }
         }
@@ -312,9 +309,14 @@ impl Parser {
             LexItem::String(m) => {
                 return Ok(Expr::String(Box::new( AstStringNode { value: m.to_string() })));
             } ,
+            LexItem::Identifier(i) => {
+                return Ok(Expr::Identifier(Box::new(AstIdentifierNode{value: i.to_string()})));
+            }
+            LexItem::Number{ value , real_text } => {
+                return Ok(Expr::Number(Box::new(AstNumberNode{value : *value, text_rep : real_text.to_string() })));
+            }
             _ => return Err(format!("Didnt find rhs "))
         }
-
     }
 }
 
