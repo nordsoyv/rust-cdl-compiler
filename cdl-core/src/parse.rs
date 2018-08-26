@@ -304,6 +304,29 @@ impl Parser {
         Ok(node)
     }
 
+
+    // E --> T {( "+" | "-" ) T}
+    fn parse_expr(&mut self) -> Result<Expr, String> {
+        let mut term = self.parse_term()?;
+        match self.peek_current_token() {
+            LexItem::Minus | LexItem::Plus => {
+                           }
+            LexItem::EOL => {
+                return Ok(term);
+            }
+            t @_ => return Err(format!("Unexpcted token when trying to parse epxr: {:?}", t));
+        }
+    }
+
+    // T --> F {( "*" | "/" ) F}
+    fn parse_term(&mut self) -> Result<Expr, String> {
+
+    }
+    // F --> v | "(" E ")" | "-" T
+    fn parse_factor(&mut self) -> Result<Expr, String> {
+
+    }
+
     fn parse_rhs(&mut self) -> Result<Expr,String> {
         match self.get_current_token() {
             LexItem::String(m) => {
@@ -323,3 +346,13 @@ impl Parser {
 
 
 
+/*
+Recursive descent parsing an expression
+ E --> T {( "+" | "-" ) T}
+ T --> F {( "*" | "/" ) F}
+ F --> v | "(" E ")" | "-" T
+
+v =  value
+
+
+*/
