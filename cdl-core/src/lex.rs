@@ -1,11 +1,11 @@
 use std::iter::Peekable;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum LexItem {
     Identifier(String),
     String(String),
     Reference(String),
-    Number {value : f64, real_text : String},
+    Number { value: f64, real_text: String },
     Colon,
     Comma,
     OpenBracket,
@@ -42,8 +42,8 @@ impl Lexer {
                 }
                 '0'...'9' => {
                     it.next();
-                    let (number , real_text)= get_number(c , &mut it);
-                    result.push(LexItem::Number{value : number, real_text});
+                    let (number, real_text) = get_number(c, &mut it);
+                    result.push(LexItem::Number { value: number, real_text });
                 }
                 '@' => {
                     it.next();
@@ -132,7 +132,7 @@ fn get_number<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> (f64, 
     number.push(c);
     while let Some(&ch) = iter.peek() {
         match ch {
-             '0'...'9' | '.' => {
+            '0'...'9' | '.' => {
                 number.push(ch);
                 iter.next();
             }

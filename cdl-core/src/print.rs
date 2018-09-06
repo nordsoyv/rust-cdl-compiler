@@ -16,7 +16,7 @@ pub fn print(root: AstRootNode) -> String {
 }
 
 fn print_entity(entity: &AstEntityNode, indent: usize) -> String {
-    let mut res = print_entity_header(&entity.header, indent );
+    let mut res = print_entity_header(&entity.header, indent);
     res += &print_entity_body(&entity.body, indent + 1);
     return res;
 }
@@ -90,7 +90,7 @@ fn print_field(field: &AstFieldNode, indent: usize) -> String {
         Expr::Function(_) => panic!("Trying to print function"),
         Expr::VPath(_) => panic!("Trying to print VPath"),
         Expr::Operator(_) => panic!("Trying to print Operator"),
-
+        Expr::UnaryOperator(_) => panic!("Trying to print UnaryOperator"),
     }
     res.push_str("\n");
     res

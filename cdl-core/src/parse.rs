@@ -8,28 +8,29 @@ pub enum Expr {
     Function(Box<AstFunctionNode>),
     VPath(Box<AstVPathNode>),
     Operator(Box<AstOperatorNode>),
+    UnaryOperator(Box<AstUnaryOperatorNode>),
 }
 
 #[derive(Debug)]
 pub struct AstStringNode {
-    pub value : String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct AstIdentifierNode {
-    pub value : String
+    pub value: String
 }
 
 #[derive(Debug)]
 pub struct AstNumberNode {
-    pub value : f64,
-    pub text_rep : String
+    pub value: f64,
+    pub text_rep: String,
 }
 
 impl AstNumberNode {
-    pub fn new(number : f64, text_rep : String) -> AstNumberNode {
+    pub fn new(number: f64, text_rep: String) -> AstNumberNode {
         AstNumberNode {
-            value : number,
+            value: number,
             text_rep,
         }
     }
@@ -37,23 +38,30 @@ impl AstNumberNode {
 
 #[derive(Debug)]
 pub struct AstFunctionNode {
-    pub identifier : String,
-    pub argument_list : Vec<Expr>
+    pub identifier: String,
+    pub argument_list: Vec<Expr>,
 }
 
 #[derive(Debug)]
 pub struct AstOperatorNode {
-    pub operator : char,
+    pub operator: char,
     pub left_side: Expr,
-    pub right_side :Expr
+    pub right_side: Expr,
 }
+
+#[derive(Debug)]
+pub struct AstUnaryOperatorNode {
+    pub operator: char,
+    pub epxr: Expr,
+}
+
 
 #[derive(Debug)]
 pub struct AstVPathNode {
     pub table: Option<String>,
-    pub sub_table : Option<String>,
-    pub field : Option<String>,
-    pub sub_field : Option<String>,
+    pub sub_table: Option<String>,
+    pub field: Option<String>,
+    pub sub_field: Option<String>,
 }
 
 #[derive(Debug)]
@@ -63,7 +71,7 @@ pub struct AstRootNode {
 
 #[derive(Debug)]
 pub struct AstEntityNode {
-    pub header : AstEntityHeaderNode,
+    pub header: AstEntityHeaderNode,
     pub body: AstEntityBodyNode,
 }
 
@@ -71,7 +79,7 @@ impl AstEntityNode {
     fn new() -> AstEntityNode {
         AstEntityNode {
             body: AstEntityBodyNode::new(),
-            header : AstEntityHeaderNode::new(),
+            header: AstEntityHeaderNode::new(),
         }
     }
 }
@@ -102,10 +110,10 @@ pub struct AstEntityHeaderNode {
 impl AstEntityHeaderNode {
     fn new() -> AstEntityHeaderNode {
         AstEntityHeaderNode {
-            main_type : String::new(),
-            sub_type : None,
-            reference : None,
-            identifier : None,
+            main_type: String::new(),
+            sub_type: None,
+            reference: None,
+            identifier: None,
         }
     }
 }
@@ -135,20 +143,20 @@ impl Parser {
         self.tokens.len()
     }
 
-    fn peek_current_token(&self) -> &LexItem {
-        &self.tokens[self.index]
+    fn peek_current_token(&self) -> LexItem {
+        self.tokens[self.index].clone()
     }
 
-    fn peek_next_token(&self) -> Result<&LexItem, String> {
+    fn peek_next_token(&self) -> Result<LexItem, String> {
         if self.index + 1 < self.tokens.len() {
-            return Ok(&self.tokens[self.index + 1]);
+            return Ok(self.tokens[self.index + 1].clone());
         }
         Err(format!("Trying to access token past end of stream"))
     }
 
-    fn get_current_token(&mut self) -> &LexItem {
+    fn get_current_token(&mut self) -> LexItem {
         self.advance_stream();
-        &self.tokens[self.index - 1]
+        self.tokens[self.index - 1].clone()
     }
 
     fn advance_stream(&mut self) {
@@ -164,7 +172,7 @@ impl Parser {
     }
 
     fn eat_token_if(&mut self, token: LexItem) {
-        if *self.peek_current_token() == token {
+        if self.peek_current_token() == token {
             self.advance_stream();
         } else {
             panic!("Trying to advance the token stream, but got unexpected token.\n\
@@ -286,11 +294,10 @@ impl Parser {
         }
     }
 
-
     fn parse_field(&mut self) -> Result<AstFieldNode, String> {
         let mut node = AstFieldNode {
             identifier: String::new(),
-            value: Expr::String(Box::new( AstStringNode { value: String::new() })),
+            value: Expr::String(Box::new(AstStringNode { value: String::new() })),
         };
 
         match self.get_current_token() {
@@ -299,60 +306,112 @@ impl Parser {
         }
 
         self.eat_token_if(LexItem::Colon);
-        node.value = self.parse_rhs()?;
-        self.eat_token_if(LexItem::EOL);
+        node.value = self.parse_expr()?;
         Ok(node)
     }
 
 
     // E --> T {( "+" | "-" ) T}
     fn parse_expr(&mut self) -> Result<Expr, String> {
-        let mut term = self.parse_term()?;
-        match self.peek_current_token() {
-            LexItem::Minus | LexItem::Plus => {
-                           }
-            LexItem::EOL => {
-                return Ok(term);
+        let mut current_expr = self.parse_term()?;
+        loop {
+            match self.peek_current_token() {
+                LexItem::Minus => {
+                    self.advance_stream();
+                    let right_side = self.parse_term()?;
+                    current_expr = Expr::Operator(Box::new(AstOperatorNode {
+                        operator: '-',
+                        left_side: current_expr,
+                        right_side,
+                    }));
+                }
+                LexItem::Plus => {
+                    self.advance_stream();
+                    let right_side = self.parse_term()?;
+                    current_expr = Expr::Operator(Box::new(AstOperatorNode {
+                        operator: '+',
+                        left_side: current_expr,
+                        right_side,
+                    }));
+                }
+                LexItem::EOL => {
+                    return Ok(current_expr);
+                }
+                t @ _ => return Err(format!("Found unexpected token when trying to parse expression: {:?}", t))
             }
-            t @_ => return Err(format!("Unexpcted token when trying to parse epxr: {:?}", t));
         }
     }
 
     // T --> F {( "*" | "/" ) F}
     fn parse_term(&mut self) -> Result<Expr, String> {
-
+        let mut current_expr = self.parse_factor()?;
+//        println!("Current term : {:?}", current_expr);
+        loop {
+            match self.peek_current_token() {
+                LexItem::Mul => {
+                    self.advance_stream();
+                    let right_side = self.parse_factor()?;
+                    current_expr = Expr::Operator(Box::new(AstOperatorNode {
+                        operator: '*',
+                        left_side: current_expr,
+                        right_side,
+                    }));
+                }
+                LexItem::Div => {
+                    self.advance_stream();
+                    let right_side = self.parse_factor()?;
+                    current_expr = Expr::Operator(Box::new(AstOperatorNode {
+                        operator: '/',
+                        left_side: current_expr,
+                        right_side,
+                    }));
+                }
+                _ => {
+                    return Ok(current_expr);
+                }
+//                t @ _ => return Err(format!("Found unexpected token when trying to parse term: {:?}", t))
+            }
+        }
     }
+
+
     // F --> v | "(" E ")" | "-" T
     fn parse_factor(&mut self) -> Result<Expr, String> {
-
-    }
-
-    fn parse_rhs(&mut self) -> Result<Expr,String> {
-        match self.get_current_token() {
-            LexItem::String(m) => {
-                return Ok(Expr::String(Box::new( AstStringNode { value: m.to_string() })));
-            } ,
-            LexItem::Identifier(i) => {
-                return Ok(Expr::Identifier(Box::new(AstIdentifierNode{value: i.to_string()})));
+        match self.peek_current_token() {
+            LexItem::Number { value, real_text } => {
+                self.advance_stream();
+                return Ok(Expr::Number(Box::new(AstNumberNode {
+                    value,
+                    text_rep: real_text.to_string(),
+                })));
             }
-            LexItem::Number{ value , real_text } => {
-                return Ok(Expr::Number(Box::new(AstNumberNode{value : *value, text_rep : real_text.to_string() })));
+            LexItem::OpenPar => {
+                self.advance_stream();
+                let expr = self.parse_expr()?;
+                self.eat_token_if(LexItem::ClosePar);
+                return Ok(expr);
             }
-            _ => return Err(format!("Didnt find rhs "))
+            LexItem::Minus => {
+                self.advance_stream();
+                let term = self.parse_term()?;
+                return Ok(Expr::UnaryOperator(Box::new(AstUnaryOperatorNode {
+                    operator: '-',
+                    epxr: term,
+                })));
+            }
+            LexItem::String(s) => {
+                self.advance_stream();
+                return Ok(Expr::String(Box::new(AstStringNode {
+                    value: s.to_string(),
+                })));
+            }
+            LexItem::Identifier(s) => {
+                self.advance_stream();
+                return Ok(Expr::Identifier(Box::new(AstIdentifierNode {
+                    value: s.to_string(),
+                })));
+            }
+            t @ _ => return Err(format!("Found unexpected token when trying to parse factor: {:?}", t))
         }
     }
 }
-
-
-
-
-/*
-Recursive descent parsing an expression
- E --> T {( "+" | "-" ) T}
- T --> F {( "*" | "/" ) F}
- F --> v | "(" E ")" | "-" T
-
-v =  value
-
-
-*/
