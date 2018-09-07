@@ -10,7 +10,7 @@ use lex::Lexer;
 pub fn compile(cdl: String) -> Result<AstRootNode, String> {
     let lexer = Lexer::new(cdl);
     let lex_items = lexer.lex().unwrap();
-    let mut parser = Parser::new(lex_items);
+    let parser = Parser::new(lex_items);
     let root = parser.parse();
     root
 }
@@ -71,7 +71,7 @@ mod test {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 4);
@@ -93,7 +93,7 @@ widget kpi {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 2);
         assert_eq!(root.children[0].body.fields.len(), 2);
@@ -110,7 +110,7 @@ widget   {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 2);
@@ -130,7 +130,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 1);
@@ -147,7 +147,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
@@ -163,7 +163,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
@@ -184,7 +184,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let mut parser = Parser::new(lex_items);
+        let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         let out = print::print(root);
         let correct = "id: widget kpi @default {
