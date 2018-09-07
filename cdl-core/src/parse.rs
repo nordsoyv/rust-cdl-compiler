@@ -1,3 +1,4 @@
+use std::cell::{Cell, Ref, RefCell};
 use lex::LexItem;
 
 #[derive(Debug)]
@@ -126,53 +127,53 @@ pub struct AstFieldNode {
 
 #[derive(Debug)]
 pub struct Parser {
-    tokens: Vec<LexItem>,
-    index: usize,
+    tokens: RefCell<Vec<LexItem>>,
+    index: Cell<usize>,
 }
 
 #[allow(dead_code)]
 impl Parser {
     pub fn new(tokens: Vec<LexItem>) -> Parser {
         Parser {
-            tokens,
-            index: 0,
+            tokens: RefCell::new(tokens),
+            index: Cell::new(0),
         }
     }
 
     fn get_length(&self) -> usize {
-        self.tokens.len()
+        self.tokens.borrow().len()
     }
 
-    fn peek_current_token(&self) -> LexItem {
-        self.tokens[self.index].clone()
+    fn peek_current_token(&self) -> Ref<LexItem> {
+        Ref::map(self.tokens.borrow(), |tokens| &tokens[self.index.get()])
     }
 
-    fn peek_next_token(&self) -> Result<LexItem, String> {
-        if self.index + 1 < self.tokens.len() {
-            return Ok(self.tokens[self.index + 1].clone());
+    fn peek_next_token(&self) -> Result<Ref<LexItem>, String> {
+        if self.index.get() + 1 <= self.tokens.borrow().len() {
+            return Ok(Ref::map(self.tokens.borrow(), |tokens| &tokens[self.index.get() + 1]));
         }
         Err(format!("Trying to access token past end of stream"))
     }
 
-    fn get_current_token(&mut self) -> LexItem {
+    fn get_current_token(&self) -> Ref<LexItem> {
         self.advance_stream();
-        self.tokens[self.index - 1].clone()
+        Ref::map(self.tokens.borrow(), |tokens| &tokens[self.index.get() - 1])
     }
 
-    fn advance_stream(&mut self) {
-        if self.index + 1 <= self.tokens.len() {
-            self.index += 1;
+    fn advance_stream(&self) {
+        if self.index.get() + 1 <= self.tokens.borrow().len() {
+            self.index.set(self.index.get() + 1);
         } else {
             panic!("Trying to advance token past end of stream")
         }
     }
 
     fn has_items(&self) -> bool {
-        self.index < self.tokens.len()
+        self.index.get() < self.tokens.borrow().len()
     }
 
-    fn eat_token_if(&mut self, token: LexItem) {
-        if self.peek_current_token() == token {
+    fn eat_token_if(&self, token: LexItem) {
+        if *self.peek_current_token() == token {
             self.advance_stream();
         } else {
             panic!("Trying to advance the token stream, but got unexpected token.\n\
@@ -180,13 +181,13 @@ impl Parser {
         }
     }
 
-    pub fn parse(&mut self) -> Result<AstRootNode, String> {
+    pub fn parse(&self) -> Result<AstRootNode, String> {
         let mut root = AstRootNode {
             children: Vec::new(),
         };
 
         while self.has_items() {
-            match self.peek_current_token() {
+            match *self.peek_current_token() {
                 LexItem::EOL => {
                     self.advance_stream();
                 }
@@ -200,29 +201,31 @@ impl Parser {
         Ok(root)
     }
 
-    fn parse_entity(&mut self) -> Result<AstEntityNode, String> {
+    fn parse_entity(&self) -> Result<AstEntityNode, String> {
         let mut node = AstEntityNode::new();
         node.header = self.parse_entity_header()?;
         node.body = self.parse_entity_body()?;
         Ok(node)
     }
 
-    fn parse_entity_header(&mut self) -> Result<AstEntityHeaderNode, String> {
+    fn parse_entity_header(&self) -> Result<AstEntityHeaderNode, String> {
         let mut node = AstEntityHeaderNode::new();
-        match (self.peek_current_token(), self.peek_next_token()?) {
-            (LexItem::Identifier(_), LexItem::Colon) => {
-                match self.get_current_token() {
-                    LexItem::Identifier(ident) => node.identifier = Some(ident.to_string()),
-                    id @ _ => return Err(format!("Trying to get identifier for entity, found {:?}", id))
-                }
+        let current = &*self.peek_current_token();
+        let next = &*self.peek_next_token()?;
+
+
+        match (current, next) {
+            (LexItem::Identifier(ref id), LexItem::Colon) => {
+                node.identifier = Some(id.to_string());
+                self.advance_stream();
                 self.eat_token_if(LexItem::Colon);
             }
             _ => {}
         };
         // get main type
-        match self.get_current_token() {
-            LexItem::Identifier(m) => node.main_type = m.to_string(),
-            token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
+        match *self.get_current_token() {
+            LexItem::Identifier(ref m) => node.main_type = m.to_string(),
+            ref token @ _ => return Err(format!("Trying to parse Entity, didnt find main type. Found {:?} instead", token))
         }
 
         match self.get_entity_subtype() {
@@ -243,21 +246,21 @@ impl Parser {
         Ok(node)
     }
 
-    fn get_entity_subtype(&mut self) -> Option<String> {
-        match self.peek_current_token() {
-            LexItem::Identifier(s) => Some(s.to_string()),
+    fn get_entity_subtype(&self) -> Option<String> {
+        match *self.peek_current_token() {
+            LexItem::Identifier(ref s) => Some(s.to_string()),
             _ => None
         }
     }
 
-    fn get_entity_reference(&mut self) -> Option<String> {
-        match self.peek_current_token() {
-            LexItem::Reference(s) => Some(s.to_string()),
+    fn get_entity_reference(&self) -> Option<String> {
+        match *self.peek_current_token() {
+            LexItem::Reference(ref s) => Some(s.to_string()),
             _ => None
         }
     }
 
-    fn parse_entity_body(&mut self) -> Result<AstEntityBodyNode, String> {
+    fn parse_entity_body(&self) -> Result<AstEntityBodyNode, String> {
         self.eat_token_if(LexItem::OpenBracket);
         self.eat_token_if(LexItem::EOL);
         let mut fields = Vec::new();
@@ -265,7 +268,7 @@ impl Parser {
 
         loop {
             // are we done?
-            match self.peek_current_token() {
+            match *self.peek_current_token() {
                 LexItem::CloseBracket => {
                     self.eat_token_if(LexItem::CloseBracket);
                     self.eat_token_if(LexItem::EOL);
@@ -277,7 +280,7 @@ impl Parser {
                 _ => {}
             };
             // skip blank lines
-            match self.peek_current_token() {
+            match *self.peek_current_token() {
                 LexItem::EOL => {
                     self.eat_token_if(LexItem::EOL);
                     continue;
@@ -286,7 +289,7 @@ impl Parser {
             }
 
             // try parsing next line
-            match (self.peek_current_token(), self.peek_next_token()?) {
+            match (&*self.peek_current_token(), &*self.peek_next_token()?) {
                 (LexItem::Identifier(_), LexItem::Colon) => fields.push(self.parse_field()?),
                 (LexItem::Identifier(_), _) => entities.push(self.parse_entity()?),
                 (_, _) => return Err("Trying to parse entity body, and not field or entity found".to_string())
@@ -294,15 +297,15 @@ impl Parser {
         }
     }
 
-    fn parse_field(&mut self) -> Result<AstFieldNode, String> {
+    fn parse_field(&self) -> Result<AstFieldNode, String> {
         let mut node = AstFieldNode {
             identifier: String::new(),
             value: Expr::String(Box::new(AstStringNode { value: String::new() })),
         };
 
-        match self.get_current_token() {
-            LexItem::Identifier(m) => node.identifier = m.to_string(),
-            identifier @ _ => return Err(format!("Didnt find field identifier, instead got {:?}", identifier))
+        match *self.get_current_token() {
+            LexItem::Identifier(ref m) => node.identifier = m.to_string(),
+            ref identifier @ _ => return Err(format!("Didnt find field identifier, instead got {:?}", identifier))
         }
 
         self.eat_token_if(LexItem::Colon);
@@ -312,10 +315,10 @@ impl Parser {
 
 
     // E --> T {( "+" | "-" ) T}
-    fn parse_expr(&mut self) -> Result<Expr, String> {
+    fn parse_expr(&self) -> Result<Expr, String> {
         let mut current_expr = self.parse_term()?;
         loop {
-            match self.peek_current_token() {
+            match *self.peek_current_token() {
                 LexItem::Minus => {
                     self.advance_stream();
                     let right_side = self.parse_term()?;
@@ -337,17 +340,17 @@ impl Parser {
                 LexItem::EOL => {
                     return Ok(current_expr);
                 }
-                t @ _ => return Err(format!("Found unexpected token when trying to parse expression: {:?}", t))
+                ref t @ _ => return Err(format!("Found unexpected token when trying to parse expression: {:?}", t))
             }
         }
     }
 
     // T --> F {( "*" | "/" ) F}
-    fn parse_term(&mut self) -> Result<Expr, String> {
+    fn parse_term(&self) -> Result<Expr, String> {
         let mut current_expr = self.parse_factor()?;
 //        println!("Current term : {:?}", current_expr);
         loop {
-            match self.peek_current_token() {
+            match *self.peek_current_token() {
                 LexItem::Mul => {
                     self.advance_stream();
                     let right_side = self.parse_factor()?;
@@ -376,12 +379,12 @@ impl Parser {
 
 
     // F --> v | "(" E ")" | "-" T
-    fn parse_factor(&mut self) -> Result<Expr, String> {
-        match self.peek_current_token() {
-            LexItem::Number { value, real_text } => {
+    fn parse_factor(&self) -> Result<Expr, String> {
+        match *self.peek_current_token() {
+            LexItem::Number { ref value, ref real_text } => {
                 self.advance_stream();
                 return Ok(Expr::Number(Box::new(AstNumberNode {
-                    value,
+                    value: *value,
                     text_rep: real_text.to_string(),
                 })));
             }
@@ -399,19 +402,19 @@ impl Parser {
                     epxr: term,
                 })));
             }
-            LexItem::String(s) => {
+            LexItem::String(ref s) => {
                 self.advance_stream();
                 return Ok(Expr::String(Box::new(AstStringNode {
                     value: s.to_string(),
                 })));
             }
-            LexItem::Identifier(s) => {
+            LexItem::Identifier(ref s) => {
                 self.advance_stream();
                 return Ok(Expr::Identifier(Box::new(AstIdentifierNode {
                     value: s.to_string(),
                 })));
             }
-            t @ _ => return Err(format!("Found unexpected token when trying to parse factor: {:?}", t))
+            ref t @ _ => return Err(format!("Found unexpected token when trying to parse factor: {:?}", t))
         }
     }
 }
