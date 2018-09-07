@@ -1,6 +1,6 @@
 use std::iter::Peekable;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq)]
 pub enum LexItem {
     Identifier(String),
     String(String),
