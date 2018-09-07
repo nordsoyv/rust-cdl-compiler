@@ -50,6 +50,12 @@ impl Lexer {
                     let reference = get_reference(&mut it);
                     result.push(LexItem::Reference(reference));
                 }
+                '#' => {
+                    it.next();
+                    let id = get_id(&mut it);
+                    result.push(LexItem::Identifier(id));
+                }
+
                 '{' => {
                     result.push(LexItem::OpenBracket);
                     it.next();
@@ -126,6 +132,21 @@ fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> St
     }
     identifier
 }
+
+fn get_id<T: Iterator<Item=char>>( iter: &mut Peekable<T>) -> String {
+    let mut identifier = String::new();
+    while let Some(&ch) = iter.peek() {
+        match ch {
+            'a'...'z' | 'A'...'Z' | '_' | '0'...'9' => {
+                identifier.push(ch);
+                iter.next();
+            }
+            _ => { break; }
+        }
+    }
+    identifier
+}
+
 
 fn get_number<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> (f64, String) {
     let mut number = String::new();

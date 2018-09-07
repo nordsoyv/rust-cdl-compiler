@@ -48,6 +48,17 @@ mod test {
         assert_eq!(lex_items.len(), 10);
     }
 
+#[test]
+    fn lex_id() {
+        let cdl = "widget kpi #id {
+    label : \"Label\"
+}".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 10);
+    }
+
     #[test]
     fn lex_extended() {
         let cdl = "widget kpi @default {
@@ -140,7 +151,7 @@ widget kpi  {
 
     #[test]
     fn parse_entity_with_id() {
-        let cdl = "id: widget kpi {
+        let cdl = " widget kpi #id {
     label : \"Label\"
     labels : \"Labels\"
 }
@@ -156,7 +167,7 @@ widget kpi  {
 
     #[test]
     fn parse_entity_with_reference() {
-        let cdl = "id: widget kpi @default {
+        let cdl = "widget kpi  #id @default {
     label : \"Label\"
     labels : \"Labels\"
 }
@@ -173,7 +184,7 @@ widget kpi  {
 
     #[test]
     fn print_cdl() {
-        let cdl = "id: widget kpi @default {
+        let cdl = "widget kpi #id @default {
     label : \"Label\"
     id : identifier
     number : 1234.001000
@@ -187,7 +198,7 @@ widget kpi  {
         let  parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         let out = print::print(root);
-        let correct = "id: widget kpi @default {
+        let correct = "widget kpi #id @default {
     label: \"Label\"
     id: identifier
     number: 1234.001000

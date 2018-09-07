@@ -210,18 +210,6 @@ impl Parser {
 
     fn parse_entity_header(&self) -> Result<AstEntityHeaderNode, String> {
         let mut node = AstEntityHeaderNode::new();
-        let current = &*self.peek_current_token();
-        let next = &*self.peek_next_token()?;
-
-
-        match (current, next) {
-            (LexItem::Identifier(ref id), LexItem::Colon) => {
-                node.identifier = Some(id.to_string());
-                self.advance_stream();
-                self.eat_token_if(LexItem::Colon);
-            }
-            _ => {}
-        };
         // get main type
         match *self.get_current_token() {
             LexItem::Identifier(ref m) => node.main_type = m.to_string(),
@@ -231,6 +219,14 @@ impl Parser {
         match self.get_entity_subtype() {
             Some(s) => {
                 node.sub_type = Some(s);
+                self.advance_stream()
+            }
+            None => {}
+        }
+
+        match self.get_entity_id() {
+            Some(s) => {
+                node.identifier = Some(s);
                 self.advance_stream()
             }
             None => {}
@@ -256,6 +252,13 @@ impl Parser {
     fn get_entity_reference(&self) -> Option<String> {
         match *self.peek_current_token() {
             LexItem::Reference(ref s) => Some(s.to_string()),
+            _ => None
+        }
+    }
+
+    fn get_entity_id(&self) -> Option<String> {
+        match *self.peek_current_token() {
+            LexItem::Identifier(ref s) => Some(s.to_string()),
             _ => None
         }
     }

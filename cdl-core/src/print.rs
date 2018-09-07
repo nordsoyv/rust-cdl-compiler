@@ -25,17 +25,19 @@ fn print_entity_header(header: &AstEntityHeaderNode, indent: usize) -> String {
     let indent = create_indent(indent);
     let mut res = "".to_string();
     res.push_str(&indent);
-    match header.identifier {
-        Some(ref id) => {
-            res.push_str(&id);
-            res.push_str(": ")
-        }
-        None => {}
-    }
     res.push_str(&header.main_type);
     res.push_str(" ");
     match header.sub_type {
         Some(ref id) => {
+            res.push_str(&id);
+            res.push_str(" ")
+        }
+        None => {}
+    }
+
+    match header.identifier {
+        Some(ref id) => {
+            res.push_str("#");
             res.push_str(&id);
             res.push_str(" ")
         }
