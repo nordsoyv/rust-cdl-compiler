@@ -53,7 +53,7 @@ pub struct AstOperatorNode {
 #[derive(Debug)]
 pub struct AstUnaryOperatorNode {
     pub operator: char,
-    pub epxr: Expr,
+    pub expr: Expr,
 }
 
 
@@ -313,6 +313,7 @@ impl Parser {
 
         self.eat_token_if(LexItem::Colon);
         node.value = self.parse_expr()?;
+        self.eat_token_if(LexItem::EOL);
         Ok(node)
     }
 
@@ -343,7 +344,10 @@ impl Parser {
                 LexItem::EOL => {
                     return Ok(current_expr);
                 }
-                ref t @ _ => return Err(format!("Found unexpected token when trying to parse expression: {:?}", t))
+                _ => {
+                    return Ok(current_expr);
+                }
+//                ref t @ _ => return Err(format!("Found unexpected token when trying to parse expression: {:?}", t))
             }
         }
     }
@@ -391,6 +395,30 @@ impl Parser {
                     text_rep: real_text.to_string(),
                 })));
             }
+            LexItem::String(ref s) => {
+                self.advance_stream();
+                return Ok(Expr::String(Box::new(AstStringNode {
+                    value: s.to_string(),
+                })));
+            }
+            LexItem::Identifier(ref s) => {
+                match *self.peek_next_token()? {
+                    LexItem::Colon => {
+                        let path = self.parse_vpath()?;
+                        return Ok(path);
+                    }
+                    LexItem::OpenPar => {
+                        let path = self.parse_function()?;
+                        return Ok(path);
+                    }
+                    _ => {
+                        self.advance_stream();
+                        return Ok(Expr::Identifier(Box::new(AstIdentifierNode {
+                            value: s.to_string(),
+                        })));
+                    }
+                }
+            }
             LexItem::OpenPar => {
                 self.advance_stream();
                 let expr = self.parse_expr()?;
@@ -402,22 +430,67 @@ impl Parser {
                 let term = self.parse_term()?;
                 return Ok(Expr::UnaryOperator(Box::new(AstUnaryOperatorNode {
                     operator: '-',
-                    epxr: term,
-                })));
-            }
-            LexItem::String(ref s) => {
-                self.advance_stream();
-                return Ok(Expr::String(Box::new(AstStringNode {
-                    value: s.to_string(),
-                })));
-            }
-            LexItem::Identifier(ref s) => {
-                self.advance_stream();
-                return Ok(Expr::Identifier(Box::new(AstIdentifierNode {
-                    value: s.to_string(),
+                    expr: term,
                 })));
             }
             ref t @ _ => return Err(format!("Found unexpected token when trying to parse factor: {:?}", t))
+        }
+    }
+
+    fn parse_vpath(&self) -> Result<Expr, String> {
+        let source = match *self.get_current_token() {
+            LexItem::Identifier(ref s) => {
+                s.to_string()
+            }
+            ref t @ _ => return Err(format!("Found unexpected token when trying to parse vpath: {:?}", t))
+        };
+        self.eat_token_if(LexItem::Colon);
+        let question = match *self.get_current_token() {
+            LexItem::Identifier(ref s) => {
+                s.to_string()
+            }
+            ref t @ _ => return Err(format!("Found unexpected token when trying to parse vpath: {:?}", t))
+        };
+
+        return Ok(Expr::VPath(Box::new(AstVPathNode {
+            table: Some(source),
+            sub_table: None,
+            field: Some(question),
+            sub_field: None,
+        })));
+    }
+
+    fn parse_function(&self) -> Result<Expr, String> {
+        let name = match *self.get_current_token() {
+            LexItem::Identifier(ref s) => {
+                s.to_string()
+            }
+            ref t @ _ => return Err(format!("Found unexpected token when trying to parse function: {:?}", t))
+        };
+        self.eat_token_if(LexItem::OpenPar);
+        let arg_list = self.parse_arg_list()?;
+        self.eat_token_if(LexItem::ClosePar);
+        return Ok(Expr::Function(Box::new(AstFunctionNode {
+            identifier: name,
+            argument_list: arg_list,
+        })));
+    }
+
+    fn parse_arg_list(&self) -> Result<Vec<Expr>, String> {
+        let mut args = Vec::new();
+        loop {
+            match *self.peek_current_token() {
+                LexItem::Comma => {
+                    self.advance_stream();
+                }
+                LexItem::ClosePar => {
+                    return Ok(args);
+                }
+                _ => {
+                    args.push(self.parse_expr()?);
+                }
+
+            }
         }
     }
 }

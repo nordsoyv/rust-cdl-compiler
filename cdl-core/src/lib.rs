@@ -26,6 +26,20 @@ mod test {
     use parse::Parser;
     use print;
 
+    const EXPR_CDL: &str = "widget kpi   {
+    expr1: 1 + 1
+    expr1: 1 * 1
+    expr1: 1 * -1
+    expr1: 1 - 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: 1 + (1 + 1) + 1
+    expr1: s1
+    expr1: s1:q1
+    expr1: NPS(s1:q1)
+    expr1: NPS(s1:q1, MAX(1 , 2 ,3))
+}
+";
+
     #[test]
     fn simple_lex() {
         let cdl = "widget kpi {
@@ -48,7 +62,7 @@ mod test {
         assert_eq!(lex_items.len(), 10);
     }
 
-#[test]
+    #[test]
     fn lex_id() {
         let cdl = "widget kpi #id {
     label : \"Label\"
@@ -82,7 +96,7 @@ mod test {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 4);
@@ -104,7 +118,7 @@ widget kpi {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 2);
         assert_eq!(root.children[0].body.fields.len(), 2);
@@ -121,7 +135,7 @@ widget   {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 2);
@@ -141,7 +155,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].body.fields.len(), 1);
@@ -158,7 +172,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
@@ -174,7 +188,7 @@ widget kpi  {
 ".to_string();
         let lexer = Lexer::new(cdl);
         let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
+        let parser = Parser::new(lex_items);
         let root = parser.parse().unwrap();
         assert_eq!(root.children.len(), 1);
         assert_eq!(root.children[0].header.identifier, Some("id".to_string()));
@@ -183,8 +197,42 @@ widget kpi  {
     }
 
     #[test]
-    fn print_cdl() {
-        let cdl = "widget kpi #id @default {
+    fn parse_entity_with_expr() {
+        let lexer = Lexer::new(EXPR_CDL.to_string());
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        assert_eq!(root.children.len(), 1);
+        assert_eq!(root.children[0].body.fields.len(), 10);
+    }
+
+    #[test]
+    fn print_cdl_expr_cdl() {
+        let lexer = Lexer::new(EXPR_CDL.to_string());
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        let out = print::print(root);
+        let correct = "widget kpi {
+    expr1: 1 + 1
+    expr1: 1 * 1
+    expr1: 1 * -1
+    expr1: 1 - 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: s1
+    expr1: s1:q1
+    expr1: NPS(s1:q1)
+    expr1: NPS(s1:q1, MAX(1, 2, 3))
+}
+".to_string();
+        assert_eq!(out, correct);
+    }
+}
+
+#[test]
+fn print_cdl() {
+    let cdl = "widget kpi #id @default {
     label : \"Label\"
     id : identifier
     number : 1234.001000
@@ -193,12 +241,12 @@ widget kpi  {
     }
 }
 ".to_string();
-        let lexer = Lexer::new(cdl);
-        let lex_items = lexer.lex().unwrap();
-        let  parser = Parser::new(lex_items);
-        let root = parser.parse().unwrap();
-        let out = print::print(root);
-        let correct = "widget kpi #id @default {
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
+    let parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+    let out = print::print(root);
+    let correct = "widget kpi #id @default {
     label: \"Label\"
     id: identifier
     number: 1234.001000
@@ -207,7 +255,29 @@ widget kpi  {
     }
 }
 ".to_string();
-        assert_eq!(out, correct);
-    }
+    assert_eq!(out, correct);
+}
+
+
+#[test]
+fn print_expressions() {
+    let cdl = "widget kpi {
+    expr : 1 + 1
+    expr : 1 * 1
+    expr : 1 * -1
+}
+".to_string();
+    let lexer = Lexer::new(cdl);
+    let lex_items = lexer.lex().unwrap();
+    let parser = Parser::new(lex_items);
+    let root = parser.parse().unwrap();
+    let out = print::print(root);
+    let correct = "widget kpi {
+    expr: 1 + 1
+    expr: 1 * 1
+    expr: 1 * -1
+}
+".to_string();
+    assert_eq!(out, correct);
 }
 

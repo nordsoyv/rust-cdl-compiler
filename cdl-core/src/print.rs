@@ -77,24 +77,79 @@ fn print_field(field: &AstFieldNode, indent: usize) -> String {
     res.push_str(&create_indent(indent));
     res.push_str(&field.identifier);
     res.push_str(": ");
-    match field.value {
-        Expr::String(ref s) => {
-            res.push_str("\"");
-            res.push_str(&s.value);
-            res.push_str("\"");
-        }
-        Expr::Identifier(ref s) => {
-            res.push_str(&s.value);
-        }
-        Expr::Number(ref n) => {
-            res.push_str(&n.text_rep.to_string());
-        }
-        Expr::Function(_) => panic!("Trying to print function"),
-        Expr::VPath(_) => panic!("Trying to print VPath"),
-        Expr::Operator(_) => panic!("Trying to print Operator"),
-        Expr::UnaryOperator(_) => panic!("Trying to print UnaryOperator"),
-    }
+    res.push_str(&print_expr(&field.value));
     res.push_str("\n");
+    res
+}
+
+fn print_expr(expr: &Expr) -> String {
+    let mut res = "".to_string();
+
+    match expr {
+        Expr::Operator(node) => {
+            let left_side = print_expr(&node.left_side);
+            let right_side = print_expr(&node.right_side);
+            res.push_str(&left_side);
+            res.push_str(" ");
+            res.push(node.operator);
+            res.push_str(" ");
+            res.push_str(&right_side);
+        }
+        Expr::Identifier(node) => {
+            res.push_str(&node.value);
+        }
+        Expr::String(node) => {
+            res.push_str("\"");
+            res.push_str(&node.value);
+            res.push_str("\"");
+        }
+        Expr::UnaryOperator(node) => {
+            res.push(node.operator);
+            res.push_str(&print_expr(&node.expr));
+        }
+        Expr::Number(node) => {
+            res.push_str(&node.text_rep);
+        }
+        Expr::Function(node) => {
+            let mut arg_list = Vec::new();
+            res.push_str(&node.identifier);
+            res.push('(');
+            for arg in &node.argument_list {
+                arg_list.push(print_expr(&arg));
+            }
+            res.push_str(&(arg_list.join(", ")));
+            res.push(')');
+        }
+        Expr::VPath(node) => {
+            match node.table {
+                Some(ref s) => {
+                    res.push_str(s);
+                }
+                _ => {}
+            }
+            match node.sub_table {
+                Some(ref s) => {
+                    res.push_str(s);
+                }
+                _ => {}
+            }
+
+            res.push(':');
+            match node.field {
+                Some(ref s) => {
+                    res.push_str(s);
+                }
+                _ => {}
+            }
+
+            match node.sub_field {
+                Some(ref s) => {
+                    res.push_str(s);
+                }
+                _ => {}
+            }
+        }
+    }
     res
 }
 
