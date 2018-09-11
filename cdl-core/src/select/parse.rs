@@ -18,7 +18,7 @@ pub struct SelectorParser {
 }
 
 impl SelectorParser {
-    pub fn new(tokens : Vec<LexItem>) -> SelectorParser {
+    pub fn new(tokens: Vec<LexItem>) -> SelectorParser {
         SelectorParser {
             tokens: RefCell::from(tokens),
             index: Cell::from(0),
@@ -58,6 +58,11 @@ impl SelectorParser {
 
 
     pub fn parse(&self) -> Result<Selector, String> {
+        return Ok(self.parse_selector()?);
+    }
+
+
+    fn parse_selector(&self) -> Result<Selector,String> {
         let mut res = Selector {
             main_type: None,
             sub_type: None,
@@ -69,6 +74,10 @@ impl SelectorParser {
                 LexItem::Identifier(ref s) => {
                     self.advance_stream();
                     res.main_type = Some(s.to_string());
+                }
+                LexItem::Arrow => {
+                    self.advance_stream();
+                    res.child = Some(Box::new( self.parse_selector()?));
                 }
                 _ => {}
             }
@@ -84,6 +93,10 @@ impl SelectorParser {
                     self.eat_token_if(LexItem::CloseSquare);
                     res.sub_type = Some(ident);
                 }
+                LexItem::Arrow => {
+                    self.advance_stream();
+                    res.child = Some(Box::new( self.parse_selector()?));
+                }
                 _ => {}
             }
         }
@@ -97,6 +110,10 @@ impl SelectorParser {
                     };
                     res.identifier = Some(ident);
                 }
+                LexItem::Arrow => {
+                    self.advance_stream();
+                    res.child = Some(Box::new( self.parse_selector()?));
+                }
                 _ => {}
             }
         }
@@ -107,7 +124,7 @@ impl SelectorParser {
 #[cfg(test)]
 mod test {
     use select::parse::SelectorParser;
-    use select::lex::{lex_selector};
+    use select::lex::lex_selector;
 
     #[test]
     fn parse_test() {
@@ -180,8 +197,19 @@ mod test {
         assert_eq!(sel.identifier.unwrap(), "identifier");
     }
 
-
-
+    #[test]
+    fn parse_sub_selectors() {
+        let s = "main[kpi] > [kpi].label";
+        let tokens = lex_selector(s);
+        let parser = SelectorParser::new(tokens);
+        let sel = parser.parse().unwrap();
+        assert_eq!(sel.main_type.unwrap(), "main");
+        assert_eq!(sel.sub_type.unwrap(), "kpi");
+        assert_eq!(sel.identifier.is_none(), true);
+        assert_eq!(sel.child.is_some(), true);
+        let child = sel.child.unwrap();
+        assert_eq!(child.identifier.unwrap(), "label");
+    }
 }
 
 

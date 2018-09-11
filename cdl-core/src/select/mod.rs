@@ -1,85 +1,99 @@
+mod lex;
+mod parse;
+
 use parse::AstEntityNode;
 use parse::AstRootNode;
 use parse::AstEntityHeaderNode;
 use parse::AstFieldNode;
-use select::lex::{lex_selector};
+use select::lex::lex_selector;
 use select::parse::{SelectorParser, Selector};
 
-mod lex;
-mod parse;
 
 pub fn select_entity<'a>(root: &'a AstRootNode, selector_string: &str) -> Vec<&'a AstEntityNode> {
     let tokens = lex_selector(selector_string);
     let parser = SelectorParser::new(tokens);
-
     let selector = parser.parse().unwrap();
 
     let mut result = vec![];
 
     for child in &root.children {
-        let mut sub_results = select_in_entity(child, &selector);
+        let mut sub_results = select_in_entities(vec![child], &selector);
         if sub_results.len() > 0 {
             result.append(&mut sub_results);
         }
+    }
+    let mut current_selector = selector;
+    while current_selector.child.is_some() {
+        current_selector = *current_selector.child.unwrap();
+        let sub_results = select_in_entities(result, &current_selector);
+        result = sub_results;
     }
 
     return result;
 }
 
-pub fn select_field<'a>(root: &'a AstRootNode, selector_string : &str) -> Vec<&'a AstFieldNode> {
+pub fn select_field<'a>(root: &'a AstRootNode, selector_string: &str) -> Vec<&'a AstFieldNode> {
     let tokens = lex_selector(selector_string);
     let parser = SelectorParser::new(tokens);
+    let mut selector = parser.parse().unwrap();
 
-    let selector = parser.parse().unwrap();
+    let mut intermediate = Vec::new();
 
-    let mut result = vec![];
-    for child in &root.children {
-        let mut sub_results = select_field_in_entity(child, &selector);
-        if sub_results.len() > 0 {
-            result.append(&mut sub_results);
-        }
+    for e in &root.children {
+        intermediate.push(e);
     }
 
-    return result;
-
-}
-
-fn select_in_entity<'a>(entity: &'a AstEntityNode, selector: &Selector) -> Vec<&'a AstEntityNode> {
-    let mut result = vec![];
-
-    if matches_selector(&entity.header, &selector) {
-        result.push(entity);
+    while selector.child.is_some() {
+        let sub_results = select_in_entities(intermediate, &selector);
+        intermediate = sub_results;
+        selector = *selector.child.unwrap();
     }
 
-    for child in &entity.body.children {
-        let mut sub_results = select_in_entity(child, selector);
-        if sub_results.len() > 0 {
-            result.append(&mut sub_results);
-        }
-    }
+
+    let result = select_field_in_entity(intermediate, &selector);
     return result;
 }
 
-fn select_field_in_entity<'a>(entity: &'a AstEntityNode, selector: &Selector) -> Vec<&'a AstFieldNode> {
+fn select_in_entities<'a>(entities: Vec<&'a AstEntityNode>, selector: &Selector) -> Vec<&'a AstEntityNode> {
     let mut result = vec![];
-    for field in &entity.body.fields {
-        match selector.identifier {
-            Some(ref id) => {
-                if id == &field.identifier {
-                    result.push(field);
-                }
+
+    for entity in entities {
+        if matches_selector(&entity.header, &selector) {
+            result.push(entity);
+        }
+
+        for child in &entity.body.children {
+            let mut sub_results = select_in_entities(vec![child], selector);
+            if sub_results.len() > 0 {
+                result.append(&mut sub_results);
             }
-            None => {}
         }
     }
 
-    for child in &entity.body.children {
-        let mut sub_results = select_field_in_entity(child, &selector);
-        if sub_results.len() > 0 {
-            result.append(&mut sub_results);
+    return result;
+}
+
+fn select_field_in_entity<'a>(entities: Vec<&'a AstEntityNode>, selector: &Selector) -> Vec<&'a AstFieldNode> {
+    let mut result = vec![];
+    for entity in entities {
+        for field in &entity.body.fields {
+            match selector.identifier {
+                Some(ref id) => {
+                    if id == &field.identifier {
+                        result.push(field);
+                    }
+                }
+                None => {}
+            }
+        }
+
+        for child in &entity.body.children {
+            let mut sub_results = select_field_in_entity(vec![child], &selector);
+            if sub_results.len() > 0 {
+                result.append(&mut sub_results);
+            }
         }
     }
-
     return result;
 }
 
@@ -130,13 +144,11 @@ fn matches_selector(header: &AstEntityHeaderNode, selector: &Selector) -> bool {
 }
 
 
-
 #[cfg(test)]
 mod test {
     use lex::Lexer;
     use parse::Parser;
-    use select::{select_entity,select_field};
-
+    use select::{select_entity, select_field};
 
     #[test]
     fn select_entity_simple() {
@@ -198,6 +210,44 @@ page {
         assert_eq!(select_entity(&root, "widget.kpiid").len(), 1);
     }
 
+
+    #[test]
+    fn select_nested_entity() {
+        let cdl = "
+page {
+
+    widget kpi {
+        label : \"Label\"
+        labels : \"Labels\"
+    }
+}
+
+page {
+
+    widget kpi {
+        label : \"Label\"
+        labels : \"Labels\"
+    }
+    widget kpi2 {
+        label : \"Label\"
+        labels : \"Labels\"
+    }
+    widget kpi3 #kpiid {
+        label : \"Label\"
+        labels : \"Labels\"
+    }
+}
+".to_string();
+        let lexer = Lexer::new(cdl);
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+
+        assert_eq!(select_entity(&root, "page > widget").len(), 4);
+        assert_eq!(select_entity(&root, "page > widget[kpi]").len(), 2);
+        assert_eq!(select_entity(&root, "page > widget[kpi2]").len(), 1);
+    }
+
     #[test]
     fn select_field_simple() {
         let cdl = "
@@ -231,12 +281,9 @@ page {
         let root = parser.parse().unwrap();
 
         assert_eq!(select_field(&root, ".label").len(), 4);
-//        assert_eq!(select_entity(&root, "widget[kpi2]").len(), 1);
-//        assert_eq!(select_entity(&root, "widget").len(), 4);
-//        assert_eq!(select_entity(&root, "widget.kpiid").len(), 1);
+        assert_eq!(select_field(&root, "page > widget[kpi3] > .label").len(), 1);
+        assert_eq!(select_field(&root, "widget > .label").len(), 4);
     }
-
-
 }
 
 
