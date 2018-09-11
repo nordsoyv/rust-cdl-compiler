@@ -1,6 +1,7 @@
 mod lex;
 mod parse;
 mod print;
+mod select;
 
 use parse::AstRootNode;
 use parse::Parser;
@@ -123,6 +124,42 @@ widget kpi {
         assert_eq!(root.children.len(), 2);
         assert_eq!(root.children[0].body.fields.len(), 2);
         assert_eq!(root.children[1].body.fields.len(), 2);
+    }
+
+    #[test]
+    fn parse_script_from_js() {
+        let cdl = "
+   datatable kpi data1 {
+      type : nps
+      vpath : t1:q1
+    }
+
+    page #overview {
+      widget kpi kpi1{
+        type : nps
+        vpath : t1:q1
+        label : \"KPI\"
+      }
+      widget kpi kpi2{
+        type : nps
+        vpath : t1:q1
+        label : \"KPI\"
+      }
+
+      widget account {
+        type : nps
+        vpath : t1:q1
+        label : \"KPI\"
+      }
+    }
+".to_string();
+        let lexer = Lexer::new(cdl);
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        assert_eq!(root.children.len(), 2);
+        assert_eq!(root.children[0].body.fields.len(), 2);
+        assert_eq!(root.children[1].body.children.len(), 3);
     }
 
     #[test]
@@ -280,4 +317,6 @@ fn print_expressions() {
 ".to_string();
     assert_eq!(out, correct);
 }
+
+
 
