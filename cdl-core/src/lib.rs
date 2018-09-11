@@ -6,7 +6,7 @@ mod select;
 use parse::AstRootNode;
 use parse::Parser;
 use lex::Lexer;
-
+pub use select::{select_field, select_entity};
 
 pub fn compile(cdl: String) -> Result<AstRootNode, String> {
     let lexer = Lexer::new(cdl);
@@ -19,6 +19,7 @@ pub fn compile(cdl: String) -> Result<AstRootNode, String> {
 pub fn print(root: AstRootNode) -> String {
     print::print(root)
 }
+
 
 
 #[cfg(test)]
