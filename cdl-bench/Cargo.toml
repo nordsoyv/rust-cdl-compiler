@@ -1,0 +1,7 @@
+[package]
+name = "cdl-bench"
+version = "0.1.0"
+authors = ["Øyvind Nordsveen <oyvind.nordsveen@confirmit.com>"]
+
+[dependencies]
+cdl-core = { path = "../cdl-core"}

@@ -1,4 +1,11 @@
 [[package]]
+name = "cdl-bench"
+version = "0.1.0"
+dependencies = [
+ "cdl-core 0.1.0",
+]
+
+[[package]]
 name = "cdl-cli"
 version = "0.1.0"
 
