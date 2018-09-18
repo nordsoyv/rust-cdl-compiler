@@ -159,7 +159,7 @@ fn get_identifier<T: Iterator<Item=char>>(c: char, iter: &mut Peekable<T>) -> St
     identifier
 }
 
-fn get_id<T: Iterator<Item=char>>( iter: &mut Peekable<T>) -> String {
+fn get_id<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     let mut identifier = String::new();
     while let Some(&ch) = iter.peek() {
         match ch {
@@ -222,6 +222,7 @@ fn get_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     }
     quoted
 }
+
 fn get_single_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     let mut quoted = String::new();
     while let Some(&ch) = iter.peek() {
@@ -237,4 +238,66 @@ fn get_single_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> S
         }
     }
     quoted
+}
+
+
+#[cfg(test)]
+mod test {
+    use lex::Lexer;
+
+    #[test]
+    fn simple_lex() {
+        let cdl = "widget kpi {
+    label : \"Label\"
+}".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 9);
+    }
+
+    #[test]
+    fn lex_reference() {
+        let cdl = "widget kpi @default {
+    label : \"Label\"
+}".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 10);
+    }
+
+    #[test]
+    fn lex_id() {
+        let cdl = "widget kpi #id {
+    label : \"Label\"
+}".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 10);
+    }
+
+    #[test]
+    fn lex_extended() {
+        let cdl = "widget kpi @default {
+    label : a(b+c)
+}".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 15);
+    }
+
+    #[test]
+    fn lex_advanced_expr() {
+        let cdl = "value: MAX(survey:Q2,survey:interview_start=max(survey:interview_start))
+        value: average(score(survey:Q7), @cr.currentPeriodB2b)
+        thresholds: #82D854 >= 100%, #FFBD5B >= 80%, #FA5263 < 80%
+        riskValue: IIF(average(SCORE(survey:Q1))<7,'H!',IIF(average(SCORE(survey:Q1))>8,'L',IIF(COUNT(survey:responseid)<1,'U','M')))".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        assert_eq!(lex_items.len(), 104);
+    }
 }

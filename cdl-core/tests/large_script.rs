@@ -1,9 +1,6 @@
 extern crate cdl_core;
-use cdl_core::compile;
 
-#[test]
-fn can_parse(){
-    let script = "
+const _SCRIPT: &str = "
     title \"For QA testing\"
 
 config hub {
@@ -634,9 +631,8 @@ format: formatterLTR
 }
 }
 }
-    ".to_string();
-//        let ast = compile(script).unwrap();
-}
+    ";
+
 
 
 

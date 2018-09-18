@@ -156,3 +156,100 @@ fn print_expr(expr: &Expr) -> String {
 fn create_indent(indent: usize) -> String {
     std::iter::repeat(" ").take(indent * 2).collect::<String>()
 }
+
+#[cfg(test)]
+mod test {
+    use lex::Lexer;
+    use parse::Parser;
+    use print;
+
+    const EXPR_CDL: &str = "widget kpi   {
+    expr1: 1 + 1
+    expr1: 1 * 1
+    expr1: 1 * -1
+    expr1: 1 - 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: 1 + (1 + 1) + 1
+    expr1: s1
+    expr1: s1:q1
+    expr1: NPS(s1:q1)
+    expr1: NPS(s1:q1, MAX(1 , 2 ,3))
+}
+";
+
+
+    #[test]
+    fn print_cdl_expr_cdl() {
+        let lexer = Lexer::new(EXPR_CDL.to_string());
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        let out = print::print(root);
+        let correct = "widget kpi {
+    expr1: 1 + 1
+    expr1: 1 * 1
+    expr1: 1 * -1
+    expr1: 1 - 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: 1 + 1 + 1 + 1
+    expr1: s1
+    expr1: s1:q1
+    expr1: NPS(s1:q1)
+    expr1: NPS(s1:q1, MAX(1, 2, 3))
+}
+".to_string();
+        assert_eq!(out, correct);
+    }
+
+
+    #[test]
+    fn print_cdl() {
+        let cdl = "widget kpi #id @default {
+    label : \"Label\"
+    id : identifier
+    number : 1234.001000
+    tile kpi {
+        type : \"type\"
+    }
+}
+".to_string();
+        let lexer = Lexer::new(cdl);
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        let out = print::print(root);
+        let correct = "widget kpi #id @default {
+    label: \"Label\"
+    id: identifier
+    number: 1234.001000
+    tile kpi {
+        type: \"type\"
+    }
+}
+".to_string();
+        assert_eq!(out, correct);
+    }
+
+
+    #[test]
+    fn print_expressions() {
+        let cdl = "widget kpi {
+    expr : 1 + 1
+    expr : 1 * 1
+    expr : 1 * -1
+}
+".to_string();
+        let lexer = Lexer::new(cdl);
+        let lex_items = lexer.lex().unwrap();
+        let parser = Parser::new(lex_items);
+        let root = parser.parse().unwrap();
+        let out = print::print(root);
+        let correct = "widget kpi {
+    expr: 1 + 1
+    expr: 1 * 1
+    expr: 1 * -1
+}
+".to_string();
+        assert_eq!(out, correct);
+    }
+}
