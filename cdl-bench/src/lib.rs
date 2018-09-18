@@ -3,15 +3,26 @@
 extern crate test;
 extern crate cdl_core;
 
+
+
 #[cfg(test)]
 mod tests {
     use test::{Bencher, black_box};
     use cdl_core::{select_field, select_entity, compile};
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 
+    #[bench]
+    fn bench_parse(b : &mut Bencher){
+        let complete_script  = .to_string();
+
+
+
+        b.iter(|| {
+
+            compile(complete_script.clone()).unwrap();
+        });
+
+
+    }
 
     #[bench]
     fn bench_select(b: &mut Bencher) {

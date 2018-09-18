@@ -88,6 +88,17 @@ mod test {
 
 
     #[test]
+    fn lex_advanced_expr(){
+        let cdl = "value: MAX(survey:Q2,survey:interview_start=max(survey:interview_start))
+        value: average(score(survey:Q7), @cr.currentPeriodB2b)
+        thresholds: #82D854 >= 100%, #FFBD5B >= 80%, #FA5263 < 80%
+        riskValue: IIF(average(SCORE(survey:Q1))<7,'H!',IIF(average(SCORE(survey:Q1))>8,'L',IIF(COUNT(survey:responseid)<1,'U','M')))".to_string();
+        let lexer = Lexer::new(cdl);
+        let res = lexer.lex();
+        let lex_items = res.unwrap();
+        println!("{:?}", lex_items);
+    }
+    #[test]
     fn parse_entity() {
         let cdl = "widget kpi {
     expr : 1 + 2

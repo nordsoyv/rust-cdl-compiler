@@ -8,6 +8,10 @@ pub enum LexItem {
     Number { value: f64, real_text: String },
     Colon,
     Comma,
+    Equal,
+    LessThan,
+    MoreThan,
+    Percent,
     OpenBracket,
     CloseBracket,
     OpenPar,
@@ -80,6 +84,12 @@ impl Lexer {
                     let quoted = get_quoted_string(&mut it);
                     result.push(LexItem::String(quoted));
                 }
+                '\'' => {
+                    it.next();
+                    let quoted = get_single_quoted_string(&mut it);
+                    result.push(LexItem::String(quoted));
+                }
+
                 ',' => {
                     result.push(LexItem::Comma);
                     it.next();
@@ -106,6 +116,22 @@ impl Lexer {
                 }
                 '*' => {
                     result.push(LexItem::Mul);
+                    it.next();
+                }
+                '=' => {
+                    result.push(LexItem::Equal);
+                    it.next();
+                }
+                '<' => {
+                    result.push(LexItem::LessThan);
+                    it.next();
+                }
+                '>' => {
+                    result.push(LexItem::MoreThan);
+                    it.next();
+                }
+                '%' => {
+                    result.push(LexItem::Percent);
                     it.next();
                 }
                 _ => {
@@ -185,6 +211,22 @@ fn get_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
     while let Some(&ch) = iter.peek() {
         match ch {
             '"' => {
+                iter.next();
+                break;
+            }
+            _ => {
+                quoted.push(ch);
+                iter.next();
+            }
+        }
+    }
+    quoted
+}
+fn get_single_quoted_string<T: Iterator<Item=char>>(iter: &mut Peekable<T>) -> String {
+    let mut quoted = String::new();
+    while let Some(&ch) = iter.peek() {
+        match ch {
+            '\'' => {
                 iter.next();
                 break;
             }

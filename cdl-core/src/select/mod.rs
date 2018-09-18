@@ -98,11 +98,11 @@ fn select_field_in_entity<'a>(entities: Vec<&'a AstEntityNode>, selector: &Selec
 }
 
 fn matches_selector(header: &AstEntityHeaderNode, selector: &Selector) -> bool {
-    let mut matches = true;
+    let matches = true;
     match selector.main_type {
         Some(ref s) => {
             if &header.main_type != s {
-                matches = false;
+                return false;
             }
         }
         None => {}
@@ -112,12 +112,12 @@ fn matches_selector(header: &AstEntityHeaderNode, selector: &Selector) -> bool {
             match header.sub_type {
                 Some(ref hs) => {
                     if hs != s {
-                        matches = false;
+                        return false;
                     }
                 }
                 None => {
                     // matching on an sub_type, but entity has none, no match
-                    matches = false;
+                    return false;
                 }
             }
         }
@@ -128,12 +128,12 @@ fn matches_selector(header: &AstEntityHeaderNode, selector: &Selector) -> bool {
             match header.identifier {
                 Some(ref hi) => {
                     if hi != s {
-                        matches = false;
+                        return false;
                     }
                 }
                 None => {
                     // matching on an identifier, but entity has none, no match
-                    matches = false;
+                    return false;
                 }
             }
         }
