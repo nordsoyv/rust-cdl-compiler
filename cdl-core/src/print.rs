@@ -1,27 +1,26 @@
-use parse::AstRootNode;
 use parse::AstEntityNode;
-use parse::AstEntityHeaderNode;
-use parse::AstEntityBodyNode;
 use parse::AstFieldNode;
 use parse::Expr;
+use parse::ParseResult;
 use std;
 
-pub fn print(root: AstRootNode) -> String {
+pub fn print(pr: ParseResult ) -> String {
     let mut res = String::new();
-    for child in &root.children {
-        let child_str = print_entity(child, 0);
+    for child_id in &pr.root.children {
+        let child = pr.get_entity(*child_id);
+        let child_str = print_entity(child, 0, &pr);
         res.push_str(&child_str);
     }
     return res;
 }
 
-fn print_entity(entity: &AstEntityNode, indent: usize) -> String {
-    let mut res = print_entity_header(&entity.header, indent);
-    res += &print_entity_body(&entity.body, indent + 1);
+fn print_entity(entity: &AstEntityNode, indent: usize,pr: &ParseResult ) -> String {
+    let mut res = print_entity_header(&entity, indent);
+    res += &print_entity_body(&entity, indent + 1, pr);
     return res;
 }
 
-fn print_entity_header(header: &AstEntityHeaderNode, indent: usize) -> String {
+fn print_entity_header(header: &AstEntityNode, indent: usize) -> String {
     let indent = create_indent(indent);
     let mut res = "".to_string();
     res.push_str(&indent);
@@ -56,39 +55,44 @@ fn print_entity_header(header: &AstEntityHeaderNode, indent: usize) -> String {
     return res;
 }
 
-fn print_entity_body(body: &AstEntityBodyNode, indent: usize) -> String {
+fn print_entity_body(body: &AstEntityNode, indent: usize, pr: &ParseResult) -> String {
     let mut res = "{\n".to_string();
 
-    for field in &body.fields {
-        res.push_str(&print_field(&field, indent + 1));
+    for field_id in &body.fields {
+        let field = pr.get_field(*field_id);
+        res.push_str(&print_field(field, indent + 1, pr));
     }
 
-    for child in &body.children {
-        res.push_str(&print_entity(&child, indent + 1));
+    for child_id in &body.children {
+        let child = pr.get_entity(*child_id);
+        res.push_str(&print_entity(child, indent + 1,pr));
     }
     res.push_str(&create_indent(indent - 1));
     res.push_str("}\n");
     return res;
 }
 
-fn print_field(field: &AstFieldNode, indent: usize) -> String {
+fn print_field(field: &AstFieldNode, indent: usize, pr : &ParseResult) -> String {
     let mut res = "".to_string();
 
     res.push_str(&create_indent(indent));
     res.push_str(&field.identifier);
     res.push_str(": ");
-    res.push_str(&print_expr(&field.value));
+    let expr = pr.get_expr(field.value);
+    res.push_str(&print_expr(expr, pr));
     res.push_str("\n");
     res
 }
 
-fn print_expr(expr: &Expr) -> String {
+fn print_expr(expr: &Expr, pr : &ParseResult) -> String {
     let mut res = "".to_string();
 
     match expr {
         Expr::Operator(node) => {
-            let left_side = print_expr(&node.left_side);
-            let right_side = print_expr(&node.right_side);
+            let left_node = pr.get_expr(node.left_side);
+            let right_node = pr.get_expr(node.right_side);
+            let left_side = print_expr(left_node, pr);
+            let right_side = print_expr(right_node,pr);
             res.push_str(&left_side);
             res.push_str(" ");
             res.push(node.operator);
@@ -105,7 +109,8 @@ fn print_expr(expr: &Expr) -> String {
         }
         Expr::UnaryOperator(node) => {
             res.push(node.operator);
-            res.push_str(&print_expr(&node.expr));
+            let expr = pr.get_expr(node.expr);
+            res.push_str(&print_expr(expr, pr));
         }
         Expr::Number(node) => {
             res.push_str(&node.text_rep);
@@ -115,7 +120,8 @@ fn print_expr(expr: &Expr) -> String {
             res.push_str(&node.identifier);
             res.push('(');
             for arg in &node.argument_list {
-                arg_list.push(print_expr(&arg));
+                let expr = pr.get_expr(*arg);
+                arg_list.push(print_expr(expr, pr));
             }
             res.push_str(&(arg_list.join(", ")));
             res.push(')');
