@@ -5,7 +5,7 @@ mod select;
 
 use parse::AstRootNode;
 use parse::Parser;
-use lex::Lexer;
+pub use lex::Lexer;
 pub use select::{select_field, select_entity};
 
 pub fn compile(cdl: String) -> Result<AstRootNode, String> {
