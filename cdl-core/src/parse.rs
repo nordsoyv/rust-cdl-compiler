@@ -129,6 +129,36 @@ pub struct AstFieldNode {
 pub struct Parser {
     tokens: RefCell<Vec<LexItem>>,
     index: Cell<usize>,
+    parse_result: ParseResult,
+}
+
+type EntityRef = usize;
+type EntityBodyRef = usize;
+type EntityHeaderRef = usize;
+type EntityFieldRef = usize;
+type EntityExprRef = usize;
+
+#[derive(Debug)]
+pub struct ParseResult {
+    root : EntityRef,
+    entities : Vec<AstEntityNode>,
+    bodies : Vec<AstEntityBodyNode>,
+    heads : Vec<AstEntityHeaderNode>,
+    fields : Vec<AstFieldNode>,
+    expressions : Vec<Expr>,
+}
+
+impl ParseResult {
+    pub fn new() -> ParseResult {
+        ParseResult {
+            root: 0,
+            entities: Vec::new(),
+            bodies: Vec::new(),
+            heads: Vec::new(),
+            fields: Vec::new(),
+            expressions: Vec::new(),
+        }
+    }
 }
 
 #[allow(dead_code)]
@@ -137,6 +167,7 @@ impl Parser {
         Parser {
             tokens: RefCell::new(tokens),
             index: Cell::new(0),
+            parse_result: ParseResult::new(),
         }
     }
 
