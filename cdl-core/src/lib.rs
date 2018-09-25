@@ -6,7 +6,7 @@ mod select;
 use parse::ParseResult;
 use parse::Parser;
 pub use lex::Lexer;
-//pub use select::{select_field, select_entity};
+pub use select::{select_field, select_entity};
 
 pub fn compile(cdl: String) -> Result<ParseResult, String> {
     let lexer = Lexer::new(cdl);

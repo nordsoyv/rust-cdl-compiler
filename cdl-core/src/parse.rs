@@ -109,9 +109,9 @@ type EntityExprRef = usize;
 #[derive(Debug)]
 pub struct ParseResult {
     pub root: AstRootNode,
-    entities: Vec<AstEntityNode>,
-    fields: Vec<AstFieldNode>,
-    expressions: Vec<Expr>,
+    pub entities: Vec<AstEntityNode>,
+    pub fields: Vec<AstFieldNode>,
+    pub expressions: Vec<Expr>,
 }
 
 impl ParseResult {
@@ -157,10 +157,6 @@ impl Parser {
             tokens: RefCell::new(tokens),
             index: Cell::new(0),
         }
-    }
-
-    fn get_length(&self) -> usize {
-        self.tokens.borrow().len()
     }
 
     fn peek_current_token(&self) -> Ref<LexItem> {

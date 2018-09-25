@@ -11,13 +11,13 @@ mod tests {
 
     use _SCRIPT;
 
-    #[bench]
-    fn bench_lex(b: &mut Bencher) {
-        b.iter(|| {
-            let lexer = Lexer::new(_SCRIPT.to_string());
-            lexer.lex().unwrap();
-        });
-    }
+//    #[bench]
+//    fn bench_lex(b: &mut Bencher) {
+//        b.iter(|| {
+//            let lexer = Lexer::new(_SCRIPT.to_string());
+//            lexer.lex().unwrap();
+//        });
+//    }
 
     #[bench]
     fn bench_select(b: &mut Bencher) {
@@ -50,7 +50,7 @@ mod tests {
 
         b.iter(|| {
             black_box(select_entity(&root, "page > widget[kpi]"));
-            black_box(select_field(&root, "widget > .label"));
+            black_box(select_field(&root, ".label"));
         });
     }
 }
