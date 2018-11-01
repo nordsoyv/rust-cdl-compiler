@@ -44,7 +44,7 @@ fn main() {
 
     let start_compile = Instant::now();
 
-    let _compiled = match compile(cdl_script){
+    let compiled = match compile(cdl_script){
         Err(e) => panic!("Error compiling {:?}", e),
         Ok(r) => r
     };
@@ -52,6 +52,6 @@ fn main() {
     let elapsed = start_compile.elapsed();
     println!("Time taken to compile : {}.{}", elapsed.as_secs(), elapsed.subsec_micros());
 
-//    println!("Compiled {:?}", compiled);
+    println!("Compiled {:?}", compiled);
 
 }

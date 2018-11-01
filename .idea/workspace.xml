@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="890f468d-344c-4de7-a56c-a6751c1a2650" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1691916418">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="6" />
+          <entry key="project.open.time.1" value="2" />
+          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.21" value="1" />
+          <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.34" value="1" />
+          <entry key="project.open.time.35" value="1" />
+          <entry key="project.open.time.37" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.9" value="2" />
+          <entry key="project.opened" value="13" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="cdl" value="2" />
+          <entry key="gitignore" value="2" />
+          <entry key="lock" value="3" />
+          <entry key="rs" value="27" />
+          <entry key="toml" value="9" />
+          <entry key="xml" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="PLAIN_TEXT" value="4" />
+          <entry key="Rust" value="27" />
+          <entry key="TOML file" value="12" />
+          <entry key="XML" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="cdl" value="166" />
+          <entry key="rs" value="26941" />
+          <entry key="toml" value="62" />
+          <entry key="txt" value="740" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="906" />
+          <entry key="Rust" value="26941" />
+          <entry key="TOML file" value="62" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
+      <usages-collector id="statistics.vcs.git.usages">
+        <counts>
+          <entry key="git.branch.checkout.local" value="2" />
+          <entry key="git.branch.create.new" value="2" />
+          <entry key="git.branch.merge" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="153">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Cargo.lock">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-bench/Cargo.toml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-cli/Cargo.toml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/Cargo.toml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/tests/large_script.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/select/lex.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1562">
+              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/lex.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6270">
+              <caret line="285" selection-start-line="285" selection-end-line="285" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-bench/src/lib.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="556">
+              <caret line="46" column="5" selection-start-line="24" selection-start-column="1" selection-end-line="46" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/lib.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cdl-cli/src/main.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="507">
+              <caret line="54" column="42" selection-start-line="54" selection-start-column="42" selection-end-line="54" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/select/mod.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2288">
+              <caret line="104" column="8" selection-start-line="104" selection-start-column="8" selection-end-line="104" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/select/parse.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4378">
+              <caret line="201" column="18" selection-start-line="201" selection-start-column="18" selection-end-line="201" selection-end-column="18" />
+              <folding>
+                <element signature="e#1604#1605#0" expanded="true" />
+                <element signature="e#1653#1654#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/parse.rs">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-core/src/print.rs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5698">
+              <caret line="259" column="5" selection-start-line="259" selection-start-column="5" selection-end-line="259" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-scripts/script1.cdl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="396">
+              <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cdl-scripts/simple.cdl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="595">
+              <caret line="2231" selection-start-line="2231" selection-end-line="2231" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>panic</find>
+      <find>i32</find>
+      <find>RefCell</find>
+      <find>rhs</find>
+      <find>String</find>
+      <find>'</find>
+      <find>&quot;</find>
+      <find>=</find>
+      <find>&lt;</find>
+      <find>header</find>
+      <find>\&quot;</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>usize</replace>
+      <replace>Cell</replace>
+      <replace>&amp;str</replace>
+      <replace>\&quot;</replace>
+      <replace>body</replace>
+      <replace>&quot;</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="esc-rewrite" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/cdl-core/src/select/mode.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/select.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/select/lex.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/select/parse.rs" />
+        <option value="$PROJECT_DIR$/Cargo.toml" />
+        <option value="$PROJECT_DIR$/cdl-bench/Cargo.toml" />
+        <option value="$PROJECT_DIR$/cdl-core/tests/large_script.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/lex.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/print.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/parse.rs" />
+        <option value="$PROJECT_DIR$/cdl-bench/src/lib.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/select/mod.rs" />
+        <option value="$PROJECT_DIR$/cdl-core/src/lib.rs" />
+        <option value="$PROJECT_DIR$/cdl-cli/Cargo.toml" />
+        <option value="$PROJECT_DIR$/cdl-scripts/script1.cdl" />
+        <option value="$PROJECT_DIR$/cdl-scripts/simple.cdl" />
+        <option value="$PROJECT_DIR$/cdl-cli/src/main.rs" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="430" />
+    <option name="y" value="94" />
+    <option name="width" value="974" />
+    <option name="height" value="1047" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <autoscrollFromSource ProjectPane="true" />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="cdl-bench" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="cdl-bench" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="cdl-cli" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="cdl-cli" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rust-cdl-compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rust-cdl-compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="cdl-scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../win32_windows" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="C:/Program Files/nodejs/node" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Cargo Command.build cli">
+    <configuration name="Test select::test::select_field_simple" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test --package cdl-core --lib select::test::select_field_simple -- --exact" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="Test select::test::select_nested_entity" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test --package cdl-core --lib select::test::select_nested_entity -- --exact" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build cli" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="build --release" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/cdl-cli" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="build " />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/cdl-core" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/cdl-cli" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test release" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test --release" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/cdl-core" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test" />
+      <option name="allFeatures" value="true" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$/cdl-core" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Cargo Command.run" />
+      <item itemvalue="Cargo Command.test" />
+      <item itemvalue="Cargo Command.build cli" />
+      <item itemvalue="Cargo Command.test release" />
+      <item itemvalue="Cargo Command.build" />
+      <item itemvalue="Cargo Command.Test select::test::select_field_simple" />
+      <item itemvalue="Cargo Command.Test select::test::select_nested_entity" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Cargo Command.Test select::test::select_field_simple" />
+        <item itemvalue="Cargo Command.Test select::test::select_nested_entity" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="890f468d-344c-4de7-a56c-a6751c1a2650" name="Default Changelist" comment="" />
+      <created>1533811319381</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1533811319381</updated>
+      <workItem from="1533811322159" duration="111000" />
+      <workItem from="1534833734260" duration="48378000" />
+      <workItem from="1535461055457" duration="154000" />
+      <workItem from="1535527489350" duration="4163000" />
+      <workItem from="1535574547239" duration="4067000" />
+      <workItem from="1536215822608" duration="15392000" />
+      <workItem from="1536562874823" duration="63000" />
+      <workItem from="1536563204941" duration="35156000" />
+      <workItem from="1536907208732" duration="20519000" />
+      <workItem from="1537535969987" duration="5912000" />
+      <workItem from="1538382689941" duration="553000" />
+      <workItem from="1541061185845" duration="13000" />
+      <workItem from="1541062113010" duration="3999000" />
+    </task>
+    <task id="LOCAL-00001" summary="initial commit">
+      <created>1533811400068</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1533811400068</updated>
+    </task>
+    <task id="LOCAL-00002" summary="initial commit">
+      <created>1533811415793</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1533811415793</updated>
+    </task>
+    <task id="LOCAL-00003" summary="initial commit">
+      <created>1534835405141</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1534835405141</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Simple parsing">
+      <created>1534932410702</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1534932410702</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Can parse entities inside entities">
+      <created>1535033305852</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1535033305852</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Move all parsing stuff inside Parser struct">
+      <created>1535090520722</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1535090520722</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add error handling">
+      <created>1535094349308</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1535094349308</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Refactor lexer">
+      <created>1535094685225</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1535094685225</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add entity ids and references">
+      <created>1535102910088</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1535102910088</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Cleanup">
+      <created>1535103225683</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1535103225683</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Cleanup">
+      <created>1535103453781</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1535103453781</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Cleanup">
+      <created>1535104074483</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1535104074483</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Split entity into header node">
+      <created>1535104820325</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1535104820325</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Printing">
+      <created>1535115131774</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1535115131774</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Printing">
+      <created>1535115211818</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1535115211818</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Can lex more symbols">
+      <created>1535115961412</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1535115961412</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Better print">
+      <created>1535115973863</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1535115973863</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Can parse some expressions :)">
+      <created>1536235033050</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1536235033050</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Remove clone from lexitem">
+      <created>1536321012248</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1536321012248</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Use Cell and RefCell around Parser fields">
+      <created>1536321574718</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1536321574718</updated>
+    </task>
+    <task id="LOCAL-00021" summary="remove unneeded mut">
+      <created>1536321588011</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1536321588011</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Change to new id syntax">
+      <created>1536322798578</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1536322798578</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add some support for vpaths and functions">
+      <created>1536572866598</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1536572866598</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Some select work">
+      <created>1536649623133</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1536649623133</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Move files around">
+      <created>1536650481928</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1536650481928</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Add sub selectors">
+      <created>1536664065543</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1536664065543</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Add benchmarking of selectors">
+      <created>1536664078244</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1536664078244</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Add more lex items">
+      <created>1537277439659</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1537277439659</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Cleanup tests">
+      <created>1537278288911</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1537278288911</updated>
+    </task>
+    <task id="LOCAL-00030" summary="cleanup">
+      <created>1537339703739</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1537339703739</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Create ParseResult type">
+      <created>1537341021570</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1537341021570</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Everything expect select works">
+      <created>1537357572500</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1537357572500</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Make select field work">
+      <created>1537868536887</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1537868536888</updated>
+    </task>
+    <task id="LOCAL-00034" summary="start of cli">
+      <created>1541064729085</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1541064729085</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Add timing to cli">
+      <created>1541065794330</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1541065794330</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="138480000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13859275" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32973504" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3729146" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.28557408" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="10" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Cargo" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
+      <window_info anchor="right" x="0" y="0" width="434" height="976" id="Documentation" order="5" side_tool="true" weight="0.32995737" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/../confirmit.appstudio.client/src/client/common/widgetFactory.js" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactor lexer" />
+    <MESSAGE value="add entity ids and references" />
+    <MESSAGE value="Cleanup" />
+    <MESSAGE value="Split entity into header node" />
+    <MESSAGE value="Printing" />
+    <MESSAGE value="Can lex more symbols" />
+    <MESSAGE value="Better print" />
+    <MESSAGE value="Can parse some expressions :)" />
+    <MESSAGE value="Remove clone from lexitem" />
+    <MESSAGE value="Use Cell and RefCell around Parser fields" />
+    <MESSAGE value="remove unneeded mut" />
+    <MESSAGE value="Change to new id syntax" />
+    <MESSAGE value="Add some support for vpaths and functions" />
+    <MESSAGE value="Some select work" />
+    <MESSAGE value="Move files around" />
+    <MESSAGE value="Add sub selectors" />
+    <MESSAGE value="Add benchmarking of selectors" />
+    <MESSAGE value="Add more lex items" />
+    <MESSAGE value="Cleanup tests" />
+    <MESSAGE value="cleanup" />
+    <MESSAGE value="Create ParseResult type" />
+    <MESSAGE value="Everything expect select works" />
+    <MESSAGE value="Make select field work" />
+    <MESSAGE value="start of cli" />
+    <MESSAGE value="Add timing to cli" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add timing to cli" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main.rs" />
+    <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="33" column="28" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/select.rs" />
+    <entry file="file://$PROJECT_DIR$/Cargo.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/Cargo.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/select/lex.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1562">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/lex.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6270">
+          <caret line="285" selection-start-line="285" selection-end-line="285" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/select/mod.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2288">
+          <caret line="104" column="8" selection-start-line="104" selection-start-column="8" selection-end-line="104" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/select/parse.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4378">
+          <caret line="201" column="18" selection-start-line="201" selection-start-column="18" selection-end-line="201" selection-end-column="18" />
+          <folding>
+            <element signature="e#1604#1605#0" expanded="true" />
+            <element signature="e#1653#1654#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/parse.rs">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/print.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5698">
+          <caret line="259" column="5" selection-start-line="259" selection-start-column="5" selection-end-line="259" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/src/lib.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-core/tests/large_script.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-bench/Cargo.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-bench/src/lib.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="556">
+          <caret line="46" column="5" selection-start-line="24" selection-start-column="1" selection-end-line="46" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-cli/Cargo.toml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-scripts/script1.cdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-scripts/simple.cdl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="2231" selection-start-line="2231" selection-end-line="2231" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cargo.lock">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cdl-cli/src/main.rs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="54" column="42" selection-start-line="54" selection-start-column="42" selection-end-line="54" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>9.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
