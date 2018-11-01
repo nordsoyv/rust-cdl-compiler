@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
 use cdl_core::compile;
-
+use std::time::{ Instant};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -42,12 +42,16 @@ fn main() {
         Ok(_) => print!("{} contains:\n{}", display, cdl_script),
     }
 
+    let start_compile = Instant::now();
 
-    let compiled = match compile(cdl_script){
+    let _compiled = match compile(cdl_script){
         Err(e) => panic!("Error compiling {:?}", e),
         Ok(r) => r
     };
 
-    println!("Compiled {:?}", compiled);
+    let elapsed = start_compile.elapsed();
+    println!("Time taken to compile : {}.{}", elapsed.as_secs(), elapsed.subsec_micros());
+
+//    println!("Compiled {:?}", compiled);
 
 }
