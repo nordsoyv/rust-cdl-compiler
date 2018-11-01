@@ -1,0 +1,23 @@
+datatable kpi data1 {
+    type : nps
+    vpath : t1:q1
+}
+
+page #overview {
+    widget kpi kpi1{
+        type : nps
+        vpath : t1:q1
+    label : "KPI"
+    }
+    widget kpi kpi2{
+        type : nps
+        vpath : t1:q1
+        label : "KPI"
+    }
+
+    widget account {
+        type : nps
+        vpath : t1:q1
+        label : "KPI"
+    }
+}
